@@ -1,0 +1,39 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "test:unit:debug",
+      "type": "npm",
+      "script": "test:unit:debug",
+      "presentation": {
+        "echo": false,
+        "reveal": "silent",
+        "focus": false,
+        "panel": "shared"
+      },
+      "isBackground": true,
+      "problemMatcher": {
+        "owner": "mocha",
+        "severity": "error",
+        "fileLocation": [
+          "relative",
+          "${workspaceRoot}"
+        ],
+        "pattern": [
+          {
+            "regexp": "^.*stack.:..(.*)\\\\.*\\((.*):(\\d+):(\\d+).*$",
+            "message": 1,
+            "file": 2,
+            "line": 3,
+            "column": 4
+          }
+        ],
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "^.*failures.*$",
+          "endsPattern": "^.*passes.*$"
+        }
+      }
+    }
+  ]
+}
