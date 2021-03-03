@@ -1,7 +1,6 @@
 import { UseCase } from "../UseCase";
 import { ValidateConfigurationFileRequestEntity } from "./ValidateConfigurationFileRequestEntity";
 import { ValidateConfigurationFileResponseEntity } from "./ValidateConfigurationFileResponseEntity";
-import { readFile } from "fs/promises";
 import { ErrorCode } from "../../entities/ErrorCode";
 import { ConfigurationFileEntity } from "../../entities/ConfigurationFileEntity";
 import { ErrorResponseEntity } from "../../entities/ErrorResponseEntity";
@@ -25,25 +24,15 @@ export class ValidateConfigurationFileUseCase
    */
   protected async usecaseLogic(): Promise<ValidateConfigurationFileResponseEntity | ErrorResponseEntity> {
     const { configurationFilePath } = this._param;
-    // TODO: move this code to data-layer ConfigurationServiceImpl.ts
-    // read the file
-    let configurationFileRaw: string;
+
+    let configuration: ConfigurationFileEntity | undefined;
     try {
-      configurationFileRaw = await readFile(configurationFilePath, { encoding: "utf-8" });
+      configuration = await this.configurationService.readConfigurationFile(configurationFilePath)
+      if (!configuration) {
+        return { success: false, errorCode: ErrorCode.CONFIG_EMPTY_FILE };
+      }
     } catch (error) {
       return { success: false, error, errorCode: ErrorCode.CONFIG_NO_FILE };
-    }
-
-    // check to see if the file is empty
-    if (!configurationFileRaw) {
-      return { success: false, errorCode: ErrorCode.CONFIG_EMPTY_FILE };
-    }
-
-    let configuration: ConfigurationFileEntity;
-    try {
-      configuration = JSON.parse(configurationFileRaw);
-    } catch (error) {
-      return { success: false, error, errorCode: ErrorCode.CONFIG_BAD_JSON };
     }
 
     // there must be a version

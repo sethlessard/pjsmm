@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "description": "CLI application to manage dependencies required by typescript sub-projects in a main project package.json",
   "bin": {
-    "merge-me-baby": "./lib/presentation/index.js"
+    "merge-me-baby": "./lib/index.js"
   },
-  "main": "./lib/presentation/index.js",
+  "main": "./lib/index.js",
   "scripts": {
     "compile": "rollup -c",
     "start": "ts-node ./lib/presentation/index.ts",

@@ -1,7 +1,8 @@
-import "regenerator-runtime/runtime.js";
+import "regenerator-runtime/runtime";
 
 // read the arguments
 const chalk = require("chalk");
+import { ConfigurationServiceImpl } from "../data/datasources/service/ConfigurationServiceImpl";
 import { ErrorCode } from "../domain/entities/ErrorCode";
 import { ErrorResponseEntity } from "../domain/entities/ErrorResponseEntity";
 import { ValidateConfigurationFileUseCase } from "../domain/usecase/ValidateConfigurationFile/ValidateConfigurationFileUseCase";
@@ -28,7 +29,7 @@ async function main(args: Arguments) {
       console.log(chalk.redBright("Not implemented!"));
       break;
     case "validate": {
-      const validateConfigFileUseCase = new ValidateConfigurationFileUseCase();
+      const validateConfigFileUseCase = new ValidateConfigurationFileUseCase(new ConfigurationServiceImpl());
       validateConfigFileUseCase.setRequestParam({ configurationFilePath: configFilePath });
 
       try {
@@ -44,6 +45,9 @@ async function main(args: Arguments) {
       }
       break;
     }
+    case undefined:
+      yargsInstance.showHelp();
+      break;
     default:
       console.error(`Unknown command: ${command}`);
       yargsInstance.showHelp();

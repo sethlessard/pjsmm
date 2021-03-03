@@ -1,10 +1,4 @@
-export type Subproject = {
-  
-  /**
-   * The path, relative to the configuration file, to the root of the Typescript subproject.
-   */
-  rootDir: string;
-}
+import { ProjectEntity } from "./ProjectEntity";
 
 export interface ConfigurationFileEntity {
 
@@ -16,5 +10,10 @@ export interface ConfigurationFileEntity {
   /**
    * The TypeScript subprojects to manage.
    */
-  projects: Subproject[];
+  projects: ProjectEntity[];
+
+  /**
+   * The file path where the configuration file lives.
+   */
+  filePath: string;
 }

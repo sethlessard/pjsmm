@@ -66,7 +66,8 @@ suite("domain/usecase/MergeDependencies/MergeDependenciesUseCase", () => {
     await writeFile(package2AppJsonPath, JSON.stringify(PJ_2), { encoding: "utf-8" });
 
     // write the main project configuration file to use
-    await writeFile(path.join(testDirectory, ".mm.json"), JSON.stringify(IntegrationHelper.createConfig()), { encoding: "utf-8" });
+    const configFilePath = path.join(testDirectory, ".mm.json");
+    await writeFile(configFilePath, JSON.stringify(IntegrationHelper.createConfig()), { encoding: "utf-8" });
 
     // write the main project package.json
     const mainPackageJsonPath = path.join(testDirectory, "package.json");
@@ -79,7 +80,7 @@ suite("domain/usecase/MergeDependencies/MergeDependenciesUseCase", () => {
     };
 
     // execute the usecase
-    // usecase.setRequestParam();
+    usecase.setRequestParam({ configFilePath });
     const response = await usecase.execute();
     assert.isTrue(response.success, "The usecase failed!");
     
