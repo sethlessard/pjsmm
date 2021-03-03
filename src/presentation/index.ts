@@ -1,11 +1,11 @@
-#!/usr/bin/env node
+import "regenerator-runtime/runtime.js";
 
 // read the arguments
-import chalk = require("chalk");
+const chalk = require("chalk");
 import { ErrorCode } from "../domain/entities/ErrorCode";
 import { ErrorResponseEntity } from "../domain/entities/ErrorResponseEntity";
 import { ValidateConfigurationFileUseCase } from "../domain/usecase/ValidateConfigurationFile/ValidateConfigurationFileUseCase";
-import yargs = require("yargs/yargs");
+const yargs = require("yargs/yargs");
 import { Arguments } from "./Arguments";
 
 // create the yargs instance

@@ -5,8 +5,9 @@
   "bin": {
     "merge-me-baby": "./lib/presentation/index.js"
   },
+  "main": "./lib/presentation/index.js",
   "scripts": {
-    "compile": "tsc -p ./",
+    "compile": "rollup -c",
     "start": "ts-node ./lib/presentation/index.ts",
     "clean": "rimraf lib/",
     "test:unit": "mocha --require ts-node/register --extensions ts -- 'test/unit/**/*.ts'",
@@ -21,20 +22,28 @@
   "dependencies": {
     "boxen": "5.0.0",
     "chalk": "4.1.0",
+    "regenerator-runtime": "0.13.7",
     "uuid": "8.3.2",
     "yargs": "16.2.0"
   },
   "devDependencies": {
+    "@babel/core": "7.13.8",
+    "@babel/preset-env": "7.13.8",
+    "@babel/preset-typescript": "7.13.0",
+    "@rollup/plugin-babel": "5.3.0",
+    "@rollup/plugin-node-resolve": "11.2.0",
     "@types/chai": "4.2.15",
     "@types/mocha": "8.2.1",
     "@types/node": "14.14.31",
     "@types/rimraf": "3.0.0",
     "@types/uuid": "8.3.0",
     "@types/yargs": "16.0.0",
+    "babel-plugin-replace-ts-export-assignment": "0.0.2",
     "chai": "4.3.0",
     "jest": "^26.6.3",
     "mocha": "8.3.0",
     "rimraf": "3.0.2",
+    "rollup": "2.40.0",
     "ts-node": "9.1.1",
     "typescript": "4.2.2"
   }
