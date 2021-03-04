@@ -1,4 +1,4 @@
-import { ConfigurationFileEntity } from "src/domain/entities/ConfigurationFileEntity";
+import { ConfigurationFileEntity } from "../domain/entities/ConfigurationFileEntity";
 
 /**
  * Check to see if there are excess properties in the configuration file.

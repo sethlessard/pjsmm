@@ -1,4 +1,4 @@
-import { Subproject } from "src/domain/entities/ConfigurationFileEntity";
+import { Subproject } from "../domain/entities/ConfigurationFileEntity";
 
 /**
  * Check to see if there are excess properties in the configuration file.

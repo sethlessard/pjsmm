@@ -1,13 +1,23 @@
+import "reflect-metadata";
 import "regenerator-runtime/runtime";
 
-// read the arguments
+import { container } from "tsyringe";
 const chalk = require("chalk");
+const yargs = require("yargs/yargs");
+
+import { PackageJsonServiceImpl } from "../data/datasources/service/PackageJsonServiceImpl";
+import { TSConfigServiceImpl } from "../data/datasources/service/TSConfigServiceImpl";
 import { ConfigurationServiceImpl } from "../data/datasources/service/ConfigurationServiceImpl";
 import { ErrorCode } from "../domain/entities/ErrorCode";
 import { ErrorResponseEntity } from "../domain/entities/ErrorResponseEntity";
 import { ValidateConfigurationFileUseCase } from "../domain/usecase/ValidateConfigurationFile/ValidateConfigurationFileUseCase";
-const yargs = require("yargs/yargs");
 import { Arguments } from "./Arguments";
+import { MergeDependenciesUseCase } from "../domain/usecase/MergeDependencies/MergeDependenciesUseCase";
+
+// setup dependency injection
+container.register("ConfigurationService", { useValue: ConfigurationServiceImpl });
+container.register("PackageJsonService", { useValue: PackageJsonServiceImpl });
+container.register("TSConfigService", { useValue: TSConfigServiceImpl });
 
 // create the yargs instance
 const yargsInstance = yargs(process.argv.slice(2))
@@ -26,10 +36,24 @@ async function main(args: Arguments) {
 
   switch (command) {
     case "merge":
-      console.log(chalk.redBright("Not implemented!"));
+      const mergeDependenciesUseCase = container.resolve(MergeDependenciesUseCase);
+      mergeDependenciesUseCase.setRequestParam({ configFilePath, devDependencies: !args.skipDev, install: args.i });
+
+      try {
+        const response = await mergeDependenciesUseCase.execute();
+        if (!response.success) {
+          handleUseCaseError(response);
+          return;
+        }
+
+        console.log(chalk.green("Done."));
+      } catch (error) {
+        handleUseCaseError(error);
+        return;
+      }
       break;
     case "validate": {
-      const validateConfigFileUseCase = new ValidateConfigurationFileUseCase(new ConfigurationServiceImpl());
+      const validateConfigFileUseCase = container.resolve(ValidateConfigurationFileUseCase);
       validateConfigFileUseCase.setRequestParam({ configurationFilePath: configFilePath });
 
       try {
@@ -66,7 +90,7 @@ function handleUseCaseError(response: ErrorResponseEntity) {
       writeError("Config. Error: Invalid 'version' property! Valid values are '1.0.0'.")
       break;
     case ErrorCode.CONFIG_NO_FILE:
-      writeError("Unable to load the coniguration file!");
+      writeError(".mm.json configuration file not found..");
       break;
     case ErrorCode.CONFIG_NO_VERSION:
       writeError("Config. Error: No 'version' property!'")

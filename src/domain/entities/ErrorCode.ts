@@ -53,6 +53,11 @@ export enum ErrorCode {
    * Occurs when there is no package.json file at the root level
    * where the configuration file lives.
    */
-  NO_PACKAGE_JSON
+  NO_PACKAGE_JSON,
+
+  /**
+   * General package.json read error.
+   */
+  PACKAGE_JSON_READ_ERROR
 
 }

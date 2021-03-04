@@ -1,17 +1,22 @@
 import { dirname } from "path";
 
-import { ConfigurationService } from "src/domain/datasources/services/ConfigurationService";
-import { PackageJsonService } from "src/domain/datasources/services/PackageJsonService";
-import { TSConfigService } from "src/domain/datasources/TSConfigService";
-import { ConfigurationFileEntity } from "src/domain/entities/ConfigurationFileEntity";
-import { ErrorCode } from "src/domain/entities/ErrorCode";
-import { ErrorResponseEntity } from "src/domain/entities/ErrorResponseEntity";
-import { ProjectEntity } from "src/domain/entities/ProjectEntity";
+import { ConfigurationService } from "../../datasources/services/ConfigurationService";
+import { PackageJsonService } from "../../datasources/services/PackageJsonService";
+import { TSConfigService } from "../../datasources/services/TSConfigService";
+import { ConfigurationFileEntity } from "../../entities/ConfigurationFileEntity";
+import { ErrorCode } from "../../entities/ErrorCode";
+import { ErrorResponseEntity } from "../../entities/ErrorResponseEntity";
+import { PartialPackageJsonEntity } from "../../entities/PartialPackageJsonEntity";
+import { ProjectEntity } from "../../entities/ProjectEntity";
+import { inject, injectable } from "tsyringe";
 import { UseCase } from "../UseCase";
 import { ValidateConfigurationFileUseCase } from "../ValidateConfigurationFile/ValidateConfigurationFileUseCase";
 import { MergeDependenciesRequestEntity } from "./MergeDependenciesRequestEntity";
+import { MergeDependenciesResponseEntity } from "./MergeDependenciesResponseEntity";
 
-export class MergeDependenciesUseCase extends UseCase<MergeDependenciesRequestEntity, undefined> {
+// TODO: test
+@injectable()
+export class MergeDependenciesUseCase extends UseCase<MergeDependenciesRequestEntity, MergeDependenciesResponseEntity> {
 
   /**
    * Create a new MergeDependenciesUseCase instance.
@@ -20,9 +25,10 @@ export class MergeDependenciesUseCase extends UseCase<MergeDependenciesRequestEn
    * @param tsconfigService the tsconfig.json service.
    */
   constructor(
-    private readonly configurationService: ConfigurationService,
-    private readonly packageJsonService: PackageJsonService,
-    private readonly tsconfigService: TSConfigService
+    private readonly validateConfigurationFileUseCase: ValidateConfigurationFileUseCase,
+    @inject("ConfigurationService") private readonly configurationService: ConfigurationService,
+    @inject("PackageJsonService") private readonly packageJsonService: PackageJsonService,
+    @inject("TSConfigService") private readonly tsconfigService: TSConfigService
   ) {
     super();
   }
@@ -31,13 +37,13 @@ export class MergeDependenciesUseCase extends UseCase<MergeDependenciesRequestEn
    * Merge the dependencies of two or more package.josn files from typescript subprojects
    * into a single package.json.
    */
-  protected async usecaseLogic(): Promise<ErrorResponseEntity | undefined> {
+  protected async usecaseLogic(): Promise<MergeDependenciesResponseEntity | ErrorResponseEntity> {
     const { configFilePath } = this._param;
 
     // validate the config file
-    const validateUseCase = new ValidateConfigurationFileUseCase(this.configurationService);
-    validateUseCase.setRequestParam({ configurationFilePath: configFilePath });
-    const result = await validateUseCase.execute();
+    // TODO: should probably inject this instead
+    this.validateConfigurationFileUseCase.setRequestParam({ configurationFilePath: configFilePath });
+    const result = await this.validateConfigurationFileUseCase.execute();
     if (!result.success) {
       return result;
     }
@@ -81,10 +87,31 @@ export class MergeDependenciesUseCase extends UseCase<MergeDependenciesRequestEn
     const projects = await filterProjects(configuration.projects);
 
     // read the package.json files
-    const packageJsonFiles = await Promise.all(projects.map(({ rootDir }) => this.packageJsonService.readPackageJson(rootDir)));
+    let packageJsonFiles: PartialPackageJsonEntity[] = [];
+    try {
+      for (const p of projects) {
+        const packageJson = await this.packageJsonService.readPackageJson(p.rootDir);
+        if (!packageJson) {
+          ignoredProjects.push(p);
+        } else {
+          packageJsonFiles.push(packageJson);
+        }
+      }
+    } catch (error) {
+      return { success: false, error, errorCode: ErrorCode.PACKAGE_JSON_READ_ERROR };
+    }
 
     // merge the dependencies into the main package.json file
+    
     // TODO: complete
     // TODO: test
+
+    return {
+      success: true,
+      payload: {
+        ignoredProjects,
+        mergedProjects: projects
+      }
+    };
   }
 }

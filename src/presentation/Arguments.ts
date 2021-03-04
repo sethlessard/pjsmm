@@ -11,6 +11,16 @@ export interface Arguments extends YArguments {
   i: boolean;
 
   /**
+   * If true, development dependencies will be skipped.
+   */
+  skipDev: boolean;
+
+  /**
+   * The package manager to use for dependency installation.
+   */
+  packageManager: "yarn" | "npm";
+
+  /**
    * The positional arguments
    */
   _: [command: Command, configurationFile: string];

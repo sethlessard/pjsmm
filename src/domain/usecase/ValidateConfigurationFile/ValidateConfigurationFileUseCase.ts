@@ -6,19 +6,21 @@ import { ConfigurationFileEntity } from "../../entities/ConfigurationFileEntity"
 import { ErrorResponseEntity } from "../../entities/ErrorResponseEntity";
 import { areThereExcessProperties } from "./helpers/areThereExcessProperties";
 import { areThereExcessProjectProperties } from "./helpers/areThereExcessProjectProperties";
-import { ConfigurationService } from "src/domain/datasources/services/ConfigurationService";
+import { ConfigurationService } from "../../datasources/services/ConfigurationService";
+import { inject, injectable } from "tsyringe";
 
-export class ValidateConfigurationFileUseCase
+@injectable()
+class ValidateConfigurationFileUseCase
   extends UseCase<ValidateConfigurationFileRequestEntity, ValidateConfigurationFileResponseEntity> {
-  
+
   /**
    * Create a new ValidateConfigurationFileUseCase instance.
    * @param configurationService the Configuration service.
    */
-  constructor(private readonly configurationService: ConfigurationService) {
+  constructor(@inject("ConfigurationService") private readonly configurationService: ConfigurationService) {
     super();
   }
-  
+
   /**
    * Validate a configuration file.
    */
@@ -58,3 +60,5 @@ export class ValidateConfigurationFileUseCase
     return { success: true, payload: undefined };
   }
 }
+
+export { ValidateConfigurationFileUseCase };
