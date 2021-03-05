@@ -3,13 +3,14 @@
   "version": "1.0.0",
   "description": "CLI application to manage dependencies required by typescript sub-projects in a main project package.json",
   "bin": {
-    "merge-me-baby": "./lib/index.js"
+    "mm": "./lib/index.js"
   },
   "main": "./lib/index.js",
   "scripts": {
     "compile": "rollup -c",
     "start": "yarn compile && node ./lib/index.js",
     "clean": "rimraf lib/",
+    "test": "yarn test:unit && yarn test:integration",
     "test:unit": "mocha --require ts-node/register --extensions ts -- 'test/unit/**/*.ts'",
     "test:unit:debug": "mocha inspect --require ts-node/register --extensions ts --watch --watch-files src/,test/ -- 'test/unit/**/*.ts'",
     "test:unit:watch": "mocha --require ts-node/register --extensions ts --watch --watch-files src/,test/ -- 'test/unit/**/*.ts'",
@@ -22,6 +23,7 @@
   "dependencies": {
     "boxen": "5.0.0",
     "chalk": "4.1.0",
+    "lodash": "4.17.21",
     "reflect-metadata": "0.1.13",
     "regenerator-runtime": "0.13.7",
     "tsyringe": "4.4.0",
@@ -36,6 +38,7 @@
     "@rollup/plugin-babel": "5.3.0",
     "@rollup/plugin-node-resolve": "11.2.0",
     "@types/chai": "4.2.15",
+    "@types/lodash": "4.14.168",
     "@types/mocha": "8.2.1",
     "@types/node": "14.14.31",
     "@types/rimraf": "3.0.0",

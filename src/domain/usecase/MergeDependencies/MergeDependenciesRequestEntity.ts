@@ -1,3 +1,18 @@
+
+export interface InstallOptions {
+    
+    /**
+     * If set, the Node.JS dependencies will be installed.
+     */
+    install: boolean;
+
+    /**
+     * The package manager to use.
+     */
+    packageManager: "npm" | "yarn";
+}
+
+
 export interface MergeDependenciesRequestEntity {
 
     /**
@@ -12,7 +27,7 @@ export interface MergeDependenciesRequestEntity {
     devDependencies: boolean;
 
     /**
-     * If set, the Node.JS dependencies will be installed.
+     * The node.js dependency installation options.
      */
-    install: boolean;
+    installOptions?: InstallOptions;
 }

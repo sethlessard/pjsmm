@@ -10,9 +10,11 @@ import { PartialPackageJsonEntity } from "../../entities/PartialPackageJsonEntit
 import { ProjectEntity } from "../../entities/ProjectEntity";
 import { inject, injectable } from "tsyringe";
 import { UseCase } from "../UseCase";
-import { ValidateConfigurationFileUseCase } from "../ValidateConfigurationFile/ValidateConfigurationFileUseCase";
 import { MergeDependenciesRequestEntity } from "./MergeDependenciesRequestEntity";
 import { MergeDependenciesResponseEntity } from "./MergeDependenciesResponseEntity";
+import { ConfigurationFileValidator } from "../../entities/validators/ConfigurationFileValidator";
+import { mergeDependencies } from "./helpers/mergeDependencies";
+import { spawn } from "child_process";
 
 // TODO: test
 @injectable()
@@ -25,7 +27,6 @@ export class MergeDependenciesUseCase extends UseCase<MergeDependenciesRequestEn
    * @param tsconfigService the tsconfig.json service.
    */
   constructor(
-    private readonly validateConfigurationFileUseCase: ValidateConfigurationFileUseCase,
     @inject("ConfigurationService") private readonly configurationService: ConfigurationService,
     @inject("PackageJsonService") private readonly packageJsonService: PackageJsonService,
     @inject("TSConfigService") private readonly tsconfigService: TSConfigService
@@ -38,15 +39,7 @@ export class MergeDependenciesUseCase extends UseCase<MergeDependenciesRequestEn
    * into a single package.json.
    */
   protected async usecaseLogic(): Promise<MergeDependenciesResponseEntity | ErrorResponseEntity> {
-    const { configFilePath } = this._param;
-
-    // validate the config file
-    // TODO: should probably inject this instead
-    this.validateConfigurationFileUseCase.setRequestParam({ configurationFilePath: configFilePath });
-    const result = await this.validateConfigurationFileUseCase.execute();
-    if (!result.success) {
-      return result;
-    }
+    const { configFilePath, devDependencies, installOptions } = this._param;
 
     // read the configuration
     let configuration: ConfigurationFileEntity | undefined;
@@ -59,10 +52,16 @@ export class MergeDependenciesUseCase extends UseCase<MergeDependenciesRequestEn
       return { success: false, error, errorCode: ErrorCode.CONFIG_NO_FILE };
     }
 
+    // validate the config file
+    const validationError = ConfigurationFileValidator.validate(configuration);
+    if (validationError) {
+      return { success: false, errorCode: validationError };
+    }
+
     // verify there is a package.json at the same level of the configuation
     const projectRoot: string = dirname(configuration.filePath);
-    const appjson = await this.packageJsonService.readPackageJson(projectRoot);
-    if (!appjson) {
+    const packageJson = await this.packageJsonService.readPackageJson(projectRoot);
+    if (!packageJson) {
       return { success: false, errorCode: ErrorCode.NO_PACKAGE_JSON };
     }
 
@@ -101,10 +100,29 @@ export class MergeDependenciesUseCase extends UseCase<MergeDependenciesRequestEn
       return { success: false, error, errorCode: ErrorCode.PACKAGE_JSON_READ_ERROR };
     }
 
-    // merge the dependencies into the main package.json file
-    
-    // TODO: complete
-    // TODO: test
+    // merge all package.json dependencies 
+    const mergeResult = mergeDependencies(packageJsonFiles, devDependencies);
+    packageJson.dependencies = mergeResult.dependencies;
+    if (mergeResult?.devDependencies) {
+      packageJson.devDependencies = mergeResult.devDependencies;
+    }
+
+    // TODO: move to its own unit
+    if (installOptions && installOptions.install) {
+      let args: string[] = [];
+      if (installOptions.packageManager === "npm") {
+        args = ["install"];
+      } 
+      // install the dependencies
+      return {
+        success: true,
+        payload: {
+          ignoredProjects,
+          mergedProjects: projects,
+          installProcess: spawn(installOptions.packageManager, args)
+        }
+      }
+    }
 
     return {
       success: true,

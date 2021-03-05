@@ -1,11 +1,14 @@
-
+import "reflect-metadata";
 import { afterEach, beforeEach, suite, test } from "mocha";
 import { assert } from "chai";
 import * as path from "path";
-import { readFile, writeFile } from "fs/promises";
+import { mkdir, readFile, writeFile } from "fs/promises";
 
 import { IntegrationHelper } from "../../../IntegrationHelper";
 import { MergeDependenciesUseCase } from "../../../../../src/domain/usecase/MergeDependencies/MergeDependenciesUseCase";
+import { ConfigurationServiceImpl } from "../../../../../src/data/datasources/service/ConfigurationServiceImpl";
+import { PackageJsonServiceImpl } from "../../../../../src/data/datasources/service/PackageJsonServiceImpl";
+import { TSConfigServiceImpl } from "../../../../../src/data/datasources/service/TSConfigServiceImpl";
 
 const PJ_1 = {
   name: "package-1",
@@ -47,7 +50,10 @@ suite("domain/usecase/MergeDependencies/MergeDependenciesUseCase", () => {
   let usecase: MergeDependenciesUseCase;
   beforeEach(async () => {
     testDirectory = await IntegrationHelper.getTestDirectory();
-    usecase = new MergeDependenciesUseCase();
+    const configurationService = new ConfigurationServiceImpl();
+    const packageJsonService = new PackageJsonServiceImpl();
+    const tsConfigService = new TSConfigServiceImpl();
+    usecase = new MergeDependenciesUseCase(configurationService, packageJsonService, tsConfigService);
   });
   afterEach(async () => {
     if (testDirectory) {
@@ -59,15 +65,17 @@ suite("domain/usecase/MergeDependencies/MergeDependenciesUseCase", () => {
   test("It should be able to merge multiple subproject package.json dependencies.", async () => {
     // write the test app.json files
     const package1Path = path.join(testDirectory, "package1");
-    const package1AppJsonPath = path.join(package1Path, "app.json");
+    const package1PackageJsonPath = path.join(package1Path, "package.json");
     const package2Path = path.join(testDirectory, "package2");
-    const package2AppJsonPath = path.join(package2Path, "app.json");
-    await writeFile(package1AppJsonPath, JSON.stringify(PJ_1), { encoding: "utf-8" });
-    await writeFile(package2AppJsonPath, JSON.stringify(PJ_2), { encoding: "utf-8" });
+    const package2PackageJsonPath = path.join(package2Path, "package.json");
+    await mkdir(package1Path);
+    await mkdir(package2Path);
+    await writeFile(package1PackageJsonPath, JSON.stringify(PJ_1), { encoding: "utf-8" });
+    await writeFile(package2PackageJsonPath, JSON.stringify(PJ_2), { encoding: "utf-8" });
 
     // write the main project configuration file to use
     const configFilePath = path.join(testDirectory, ".mm.json");
-    await writeFile(configFilePath, JSON.stringify(IntegrationHelper.createConfig()), { encoding: "utf-8" });
+    await writeFile(configFilePath, JSON.stringify(IntegrationHelper.createConfig([package1Path, package2Path], testDirectory)), { encoding: "utf-8" });
 
     // write the main project package.json
     const mainPackageJsonPath = path.join(testDirectory, "package.json");
@@ -80,10 +88,10 @@ suite("domain/usecase/MergeDependencies/MergeDependenciesUseCase", () => {
     };
 
     // execute the usecase
-    usecase.setRequestParam({ configFilePath });
+    usecase.setRequestParam({ configFilePath, install: false, devDependencies: true });
     const response = await usecase.execute();
-    assert.isTrue(response.success, "The usecase failed!");
-    
+    assert.isTrue(response.success, `The usecase failed!: ${response.errorCode}`);
+
     // verify the dependencies were merged into the main package.json file
     const mainPackageJsonRaw = await readFile(mainPackageJsonPath, { encoding: "utf-8" });
     assert.isDefined(mainPackageJsonRaw, "Empty main package.json!");
@@ -95,5 +103,5 @@ suite("domain/usecase/MergeDependencies/MergeDependenciesUseCase", () => {
     assert.deepStrictEqual(mainPackageJson.dependencies, expectedDependencies, "Wrong dependencies in the main package.json!");
   });
 
-  // TODO: more tests
+  // TODO: more test
 });

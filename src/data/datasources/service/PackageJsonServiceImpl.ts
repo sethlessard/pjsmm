@@ -2,8 +2,8 @@ import { constants } from "fs";
 import { access, readFile } from "fs/promises";
 import { join } from "path";
 
-import { PackageJsonService } from "../domain/datasources/services/PackageJsonService";
-import { PartialPackageJsonEntity } from "../domain/entities/PartialPackageJsonEntity";
+import { PackageJsonService } from "../../../domain/datasources/services/PackageJsonService";
+import { PartialPackageJsonEntity } from "../../../domain/entities/PartialPackageJsonEntity";
 
 // TODO: test
 

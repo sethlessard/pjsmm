@@ -17,5 +17,13 @@ export interface PartialPackageJsonEntity {
      */
     version: string;
 
+    /**
+     * The dependencies
+     */
     dependencies: Dependency[];
+
+    /**
+     * The development dependencies
+     */
+    devDependencies: Dependency[];
 }

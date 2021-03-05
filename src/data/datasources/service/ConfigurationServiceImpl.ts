@@ -1,8 +1,8 @@
 import { join } from "path";
 import { readFile } from "fs/promises";
 
-import { ConfigurationService } from "../domain/datasources/services/ConfigurationService";
-import { ConfigurationFileEntity } from "../domain/entities/ConfigurationFileEntity";
+import { ConfigurationService } from "../../../domain/datasources/services/ConfigurationService";
+import { ConfigurationFileEntity } from "../../../domain/entities/ConfigurationFileEntity";
 
 const DEFAULT_CONFIG_PATH = join(process.cwd(), ".mm.json");
 

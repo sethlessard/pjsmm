@@ -1,21 +1,26 @@
+import "reflect-metadata";
 import { afterEach, beforeEach, suite, test } from "mocha";
 import { assert } from "chai";
 import * as path from "path";
 import { writeFile } from "fs/promises";
 
 import { IntegrationHelper } from "../../../IntegrationHelper";
-import { ValidateConfigurationFIleUseCase } from "../../../../../src/domain/usecase/ValidateConfigurationFile/ValidateConfigurationFileUseCase";
+import { ValidateConfigurationFileUseCase } from "../../../../../src/domain/usecase/ValidateConfigurationFile/ValidateConfigurationFileUseCase";
 import { ErrorResponseEntity } from "../../../../../src/domain/entities/ErrorResponseEntity";
 import { ErrorCode } from "../../../../../src/domain/entities/ErrorCode";
+import { ConfigurationService } from "../../../../../src/domain/datasources/services/ConfigurationService";
+import { ConfigurationServiceImpl } from "../../../../../src/data/datasources/service/ConfigurationServiceImpl";
 
 suite("domain/usecase/ValidateConfigurationFileUseCase/ValidateConfigurationFileUseCase", () => {
 
   let testDirectory: string;
   let configPath: string;
-  let usecase: ValidateConfigurationFIleUseCase;
+  let usecase: ValidateConfigurationFileUseCase;
   beforeEach(async () => {
     testDirectory = await IntegrationHelper.getTestDirectory();
-    usecase = new ValidateConfigurationFIleUseCase();
+    // setup dependency injection
+    const configService: ConfigurationService = new ConfigurationServiceImpl();
+    usecase = new ValidateConfigurationFileUseCase(configService);
     configPath = path.join(testDirectory, ".mm.json");
   });
   afterEach(async () => {
