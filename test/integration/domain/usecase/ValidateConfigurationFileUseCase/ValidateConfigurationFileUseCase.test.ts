@@ -31,7 +31,7 @@ suite("domain/usecase/ValidateConfigurationFileUseCase/ValidateConfigurationFile
   });
 
   test("It should return with an error if there is no configuration file supplied.", async () => {
-    usecase.setRequestParam({ configurationFilePath: path.join(testDirectory, ".pjsmm.json") });
+    usecase.setRequestParam({ configurationFilePath: configPath });
     const result = await usecase.execute();
     assert.isFalse(result.success);
 

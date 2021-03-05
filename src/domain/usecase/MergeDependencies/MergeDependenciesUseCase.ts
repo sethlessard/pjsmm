@@ -1,3 +1,5 @@
+
+import { spawn } from "child_process";
 import { dirname } from "path";
 
 import { ConfigurationService } from "../../datasources/services/ConfigurationService";
@@ -14,7 +16,6 @@ import { MergeDependenciesRequestEntity } from "./MergeDependenciesRequestEntity
 import { MergeDependenciesResponseEntity } from "./MergeDependenciesResponseEntity";
 import { ConfigurationFileValidator } from "../../entities/validators/ConfigurationFileValidator";
 import { mergeDependencies } from "./helpers/mergeDependencies";
-import { spawn } from "child_process";
 
 // TODO: test
 @injectable()
@@ -119,7 +120,7 @@ export class MergeDependenciesUseCase extends UseCase<MergeDependenciesRequestEn
         payload: {
           ignoredProjects,
           mergedProjects: projects,
-          installProcess: spawn(installOptions.packageManager, args)
+          installProcess: spawn(installOptions.packageManager, args, { cwd: projectRoot })
         }
       }
     }

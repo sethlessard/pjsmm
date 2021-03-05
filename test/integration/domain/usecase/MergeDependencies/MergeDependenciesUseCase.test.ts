@@ -9,6 +9,7 @@ import { MergeDependenciesUseCase } from "../../../../../src/domain/usecase/Merg
 import { ConfigurationServiceImpl } from "../../../../../src/data/datasources/service/ConfigurationServiceImpl";
 import { PackageJsonServiceImpl } from "../../../../../src/data/datasources/service/PackageJsonServiceImpl";
 import { TSConfigServiceImpl } from "../../../../../src/data/datasources/service/TSConfigServiceImpl";
+import { ErrorResponseEntity } from "../../../../../src/domain/entities/ErrorResponseEntity";
 
 const PJ_1 = {
   name: "package-1",
@@ -88,9 +89,9 @@ suite("domain/usecase/MergeDependencies/MergeDependenciesUseCase", () => {
     };
 
     // execute the usecase
-    usecase.setRequestParam({ configFilePath, install: false, devDependencies: true });
+    usecase.setRequestParam({ configFilePath, installOptions: { install: true, packageManager: "yarn" }, devDependencies: true });
     const response = await usecase.execute();
-    assert.isTrue(response.success, `The usecase failed!: ${response.errorCode}`);
+    assert.isTrue(response.success, `The usecase failed!: ${(response as ErrorResponseEntity).errorCode}`);
 
     // verify the dependencies were merged into the main package.json file
     const mainPackageJsonRaw = await readFile(mainPackageJsonPath, { encoding: "utf-8" });

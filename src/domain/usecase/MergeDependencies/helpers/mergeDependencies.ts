@@ -1,5 +1,3 @@
-import * as _ from "lodash";
-
 import { Dependency, PartialPackageJsonEntity } from "../../../entities/PartialPackageJsonEntity";
 
 // TODO: provide a "dependency merge strategy" when multiple dependency definitions exist
@@ -20,7 +18,7 @@ function _mergeDependencies(allDependencies: Dependency[][]): Dependency[] {
             // TODO: else if (version of d > version of existing) { use d }
             return false;
         })]
-    });
+    }, []);
 }
 
 // TODO: test
