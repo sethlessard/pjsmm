@@ -87,7 +87,7 @@ export class MergeDependenciesUseCase extends UseCase<MergeDependenciesRequestEn
     const projects = await filterProjects(configuration.projects);
 
     // read the package.json files
-    let packageJsonFiles: PartialPackageJsonEntity[] = [];
+    const packageJsonFiles: PartialPackageJsonEntity[] = [];
     try {
       for (const p of projects) {
         const packageJson = await this.packageJsonService.readPackageJson(p.rootDir);
@@ -125,7 +125,7 @@ export class MergeDependenciesUseCase extends UseCase<MergeDependenciesRequestEn
           mergedProjects: projects,
           installProcess: spawn(installOptions.packageManager, args, { cwd: projectRoot })
         }
-      }
+      };
     }
 
     return {

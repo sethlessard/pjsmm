@@ -26,6 +26,6 @@ suite("domain/entities/validators/ConfiguraionFileValidator", () => {
   
     test("It should return true if there are invalid properties", () => {
       assert.isTrue(ConfigurationFileValidator.areThereExcessProjectProperties([({ rootDir: "path/to/project", invalidProp: true } as ProjectEntity)]));
-    })
-  })
+    });
+  });
 });

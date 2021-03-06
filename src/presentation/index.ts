@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 import "reflect-metadata";
 import "regenerator-runtime/runtime";
 
@@ -35,47 +36,48 @@ async function main(args: Arguments) {
   const [command, configFilePath] = args._;
 
   switch (command) {
-    case "merge":
-      const mergeDependenciesUseCase = container.resolve(MergeDependenciesUseCase);
-      mergeDependenciesUseCase.setRequestParam({ configFilePath, devDependencies: !args.skipDev, installOptions: { install: args.i, packageManager: args.packageManager ?? "yarn" } });
+  case "merge": {
+    const mergeDependenciesUseCase = container.resolve(MergeDependenciesUseCase);
+    mergeDependenciesUseCase.setRequestParam({ configFilePath, devDependencies: !args.skipDev, installOptions: { install: args.i, packageManager: args.packageManager ?? "yarn" } });
 
-      try {
-        const response = await mergeDependenciesUseCase.execute();
-        if (!response.success) {
-          handleUseCaseError(response);
-          return;
-        }
-
-        console.log(chalk.green("Done."));
-      } catch (error) {
-        handleUseCaseError(error);
+    try {
+      const response = await mergeDependenciesUseCase.execute();
+      if (!response.success) {
+        handleUseCaseError(response);
         return;
       }
-      break;
-    case "validate": {
-      const validateConfigFileUseCase = container.resolve(ValidateConfigurationFileUseCase);
-      validateConfigFileUseCase.setRequestParam({ configurationFilePath: configFilePath });
 
-      try {
-        const response = await validateConfigFileUseCase.execute();
-        if (!response.success) {
-          handleUseCaseError(response);
-          return;
-        }
-
-        console.log(chalk.green("The configuration file is valid!"));
-      } catch (error) {
-        handleUseCaseError({ success: false, errorCode: ErrorCode.GENERAL, error });
-      }
-      break;
+      console.log(chalk.green("Done."));
+    } catch (error) {
+      handleUseCaseError(error);
+      return;
     }
-    case undefined:
-      yargsInstance.showHelp();
-      break;
-    default:
-      console.error(`Unknown command: ${command}`);
-      yargsInstance.showHelp();
-      break;
+    break;
+  }
+  case "validate": {
+    const validateConfigFileUseCase = container.resolve(ValidateConfigurationFileUseCase);
+    validateConfigFileUseCase.setRequestParam({ configurationFilePath: configFilePath });
+
+    try {
+      const response = await validateConfigFileUseCase.execute();
+      if (!response.success) {
+        handleUseCaseError(response);
+        return;
+      }
+
+      console.log(chalk.green("The configuration file is valid!"));
+    } catch (error) {
+      handleUseCaseError({ success: false, errorCode: ErrorCode.GENERAL, error });
+    }
+    break;
+  }
+  case undefined:
+    yargsInstance.showHelp();
+    break;
+  default:
+    console.error(`Unknown command: ${command}`);
+    yargsInstance.showHelp();
+    break;
   }
 }
 
@@ -85,26 +87,26 @@ async function main(args: Arguments) {
  */
 function handleUseCaseError(response: ErrorResponseEntity) {
   switch (response.errorCode) {
-    // configuration file 
-    case ErrorCode.CONFIG_INVALID_VERSION:
-      writeError("Config. Error: Invalid 'version' property! Valid values are '1.0.0'.")
-      break;
-    case ErrorCode.CONFIG_READ_ERROR:
-      writeError("Error reading the '.mm.json' configuration file!");
-      break;
-    case ErrorCode.CONFIG_NO_VERSION:
-      writeError("Config. Error: No 'version' property!'")
-      break;
+  // configuration file 
+  case ErrorCode.CONFIG_INVALID_VERSION:
+    writeError("Config. Error: Invalid 'version' property! Valid values are '1.0.0'.");
+    break;
+  case ErrorCode.CONFIG_READ_ERROR:
+    writeError("Error reading the '.mm.json' configuration file!");
+    break;
+  case ErrorCode.CONFIG_NO_VERSION:
+    writeError("Config. Error: No 'version' property!'");
+    break;
     // general
-    case ErrorCode.GENERAL:
-      if (response.error) {
-        writeError(response.error?.message);
-      } else {
-        writeError("An error occurred.");
-      }
-      break;
-    default:
-      writeError("Implement the case you idiot.");
+  case ErrorCode.GENERAL:
+    if (response.error) {
+      writeError(response.error?.message);
+    } else {
+      writeError("An error occurred.");
+    }
+    break;
+  default:
+    writeError("Implement the case you idiot.");
   }
 }
 

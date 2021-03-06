@@ -29,7 +29,7 @@ class ValidateConfigurationFileUseCase
 
     let configuration: ConfigurationFileEntity | undefined;
     try {
-      configuration = await this.configurationService.readConfigurationFile(configurationFilePath)
+      configuration = await this.configurationService.readConfigurationFile(configurationFilePath);
       if (!configuration) {
         return { success: false, errorCode: ErrorCode.CONFIG_EMPTY_FILE };
       }

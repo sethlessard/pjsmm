@@ -57,7 +57,7 @@ suite("domain/usecase/ValidateConfigurationFileUseCase/ValidateConfigurationFile
 
   test("It should return with an error if no 'version' is supplied", async () => {
     // write a dummy configuration file
-    await writeFile(configPath, `{"projects":[]}`, { encoding: "utf-8" });
+    await writeFile(configPath, "{\"projects\":[]}", { encoding: "utf-8" });
 
     usecase.setRequestParam({ configurationFilePath: configPath });
     const result = await usecase.execute();
@@ -70,7 +70,7 @@ suite("domain/usecase/ValidateConfigurationFileUseCase/ValidateConfigurationFile
 
   test("It should return with an error if an invalid 'version' is supplied", async () => {
     // write a dummy configuration file
-    await writeFile(configPath, `{"version": "0.0.1", "projects":[]}`, { encoding: "utf-8" });
+    await writeFile(configPath, "{\"version\": \"0.0.1\", \"projects\":[]}", { encoding: "utf-8" });
 
     usecase.setRequestParam({ configurationFilePath: configPath });
     const result = await usecase.execute();
@@ -83,7 +83,7 @@ suite("domain/usecase/ValidateConfigurationFileUseCase/ValidateConfigurationFile
 
   test("It should return with an error if no 'projects' property is supplied at the root level", async () => {
     // write a dummy configuration file
-    await writeFile(configPath, `{ "version": "1.0.0" }`, { encoding: "utf-8" });
+    await writeFile(configPath, "{ \"version\": \"1.0.0\" }", { encoding: "utf-8" });
 
     usecase.setRequestParam({ configurationFilePath: configPath });
     const result = await usecase.execute();
@@ -96,7 +96,7 @@ suite("domain/usecase/ValidateConfigurationFileUseCase/ValidateConfigurationFile
 
   test("It should return with an error if an invalid property is supplied at the root level", async () => {
     // write a dummy configuration file
-    await writeFile(configPath, `{"version": "1.0.0", "invalidProp": true, "projects":[]}`, { encoding: "utf-8" });
+    await writeFile(configPath, "{\"version\": \"1.0.0\", \"invalidProp\": true, \"projects\":[]}", { encoding: "utf-8" });
 
     usecase.setRequestParam({ configurationFilePath: configPath });
     const result = await usecase.execute();
@@ -109,7 +109,7 @@ suite("domain/usecase/ValidateConfigurationFileUseCase/ValidateConfigurationFile
 
   test("It should return with an error if an invalid property is supplied at the 'project' level", async () => {
     // write a dummy configuration file
-    await writeFile(configPath, `{"version": "1.0.0", "projects": [{ "path": "path/to/project", "invalidProp": true }]}`, { encoding: "utf-8" });
+    await writeFile(configPath, "{\"version\": \"1.0.0\", \"projects\": [{ \"path\": \"path/to/project\", \"invalidProp\": true }]}", { encoding: "utf-8" });
 
     usecase.setRequestParam({ configurationFilePath: configPath });
     const result = await usecase.execute();
@@ -122,7 +122,7 @@ suite("domain/usecase/ValidateConfigurationFileUseCase/ValidateConfigurationFile
 
   test("It should return with an error if malformed JSON is supplied", async () => {
     // write a dummy configuration file
-    await writeFile(configPath, `{"version": "1.0.0"`, { encoding: "utf-8" });
+    await writeFile(configPath, "{\"version\": \"1.0.0\"", { encoding: "utf-8" });
 
     usecase.setRequestParam({ configurationFilePath: configPath });
     const result = await usecase.execute();
@@ -135,7 +135,7 @@ suite("domain/usecase/ValidateConfigurationFileUseCase/ValidateConfigurationFile
 
   test("It should successfully validate a valid configuration file", async () => {
     // write a dummy configuration file
-    await writeFile(configPath, `{"version": "1.0.0", "projects": [{ "rootDir": "path/to/project" }]}`, { encoding: "utf-8" });
+    await writeFile(configPath, "{\"version\": \"1.0.0\", \"projects\": [{ \"rootDir\": \"path/to/project\" }]}", { encoding: "utf-8" });
 
     usecase.setRequestParam({ configurationFilePath: configPath });
     const result = await usecase.execute();

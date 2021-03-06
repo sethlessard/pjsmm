@@ -23,6 +23,12 @@ steps:
       script: "yarn"
   
   - task: Bash@3
+    displayName: "Lint"
+    inputs:
+      targetType: "inline"
+      script: "yarn lint"
+  
+  - task: Bash@3
     displayName: "Build"
     inputs:
       targetType: "inline"
