@@ -2,7 +2,6 @@ import { DependencyDefinition, PartialPackageJsonEntity } from "../../../entitie
 import { cleanupVersion } from "./cleanupVersion";
 import { compareVersions } from "./compareVersions";
 
-// TODO: handle '*' as a version
 // TODO: provide a "dependency merge strategy" when multiple dependency definitions exist
 /**
  * Merge some dependency arrays, keeping the latest version if there are
