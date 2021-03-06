@@ -1,0 +1,41 @@
+trigger:
+  branches:
+    include:
+      - main
+      - v*-prep
+  tags:
+    include:
+      - v*
+
+pool:
+  vmImage: "ubuntu-latest"
+
+steps:
+  - task: NodeTool@0
+    displayName: "Install Node.js 15.x"
+    inputs:
+      versionSpec: "15.x"
+
+  - task: Bash@3
+    displayName: "Install Dependencies"
+    inputs:
+      targetType: "inline"
+      script: "yarn"
+  
+  - task: Bash@3
+    displayName: "Build"
+    inputs:
+      targetType: "inline"
+      script: "yarn compile"
+  
+  - task: Bash@3
+    displayName: "Run Unit Tests"
+    inputs:
+      targetType: "inline"
+      script: "yarn test:unit"
+
+  - task: Bash@3
+    displayName: "Run Integration Tests"
+    inputs:
+      targetType: "inline"
+      script: "yarn test:integration"
