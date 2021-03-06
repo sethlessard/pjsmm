@@ -12,6 +12,7 @@
     "clean": "rimraf lib/",
     "lint": "eslint src/; eslint test/",
     "test": "yarn test:unit; yarn test:integration",
+    "check": "yarn lint; yarn test",
     "test:unit": "mocha --require ts-node/register --extensions ts -- 'test/unit/**/*.ts'",
     "debug:unit": "mocha inspect --require ts-node/register --extensions ts --watch --watch-files src/,test/ -- 'test/unit/**/*.ts'",
     "test:unit:watch": "mocha --require ts-node/register --extensions ts --watch --watch-files src/,test/ -- 'test/unit/**/*.ts'",
