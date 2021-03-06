@@ -92,7 +92,7 @@ function handleUseCaseError(response: ErrorResponseEntity) {
     writeError("Config. Error: Invalid 'version' property! Valid values are '1.0.0'.");
     break;
   case ErrorCode.CONFIG_READ_ERROR:
-    writeError("Error reading the '.mm.json' configuration file!");
+    writeError("Could not read the '.mm.json' configuration file!");
     break;
   case ErrorCode.CONFIG_NO_VERSION:
     writeError("Config. Error: No 'version' property!'");
@@ -115,7 +115,7 @@ function handleUseCaseError(response: ErrorResponseEntity) {
  * @param message the error to write.
  */
 function writeError(message: string): void {
-  console.error(chalk.yellowBright(message));
+  console.error(chalk.red(`Error: ${message}`));
 }
 
 /**
