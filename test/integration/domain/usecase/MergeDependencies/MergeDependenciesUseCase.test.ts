@@ -10,6 +10,7 @@ import { ConfigurationServiceImpl } from "../../../../../src/data/datasources/se
 import { PackageJsonServiceImpl } from "../../../../../src/data/datasources/service/PackageJsonServiceImpl";
 import { TSConfigServiceImpl } from "../../../../../src/data/datasources/service/TSConfigServiceImpl";
 import { ErrorResponseEntity } from "../../../../../src/domain/entities/ErrorResponseEntity";
+import { MergeDependenciesResponseEntity } from "../../../../../src/domain/usecase/MergeDependencies/MergeDependenciesResponseEntity";
 
 const PJ_1 = {
   name: "package-1",
@@ -71,6 +72,8 @@ suite("domain/usecase/MergeDependencies/MergeDependenciesUseCase", () => {
     const package2PackageJsonPath = path.join(package2Path, "package.json");
     await mkdir(package1Path);
     await mkdir(package2Path);
+    await IntegrationHelper.createDummyTSConfig(package1Path);
+    await IntegrationHelper.createDummyTSConfig(package2Path);
     await writeFile(package1PackageJsonPath, JSON.stringify(PJ_1), { encoding: "utf-8" });
     await writeFile(package2PackageJsonPath, JSON.stringify(PJ_2), { encoding: "utf-8" });
 
@@ -89,9 +92,11 @@ suite("domain/usecase/MergeDependencies/MergeDependenciesUseCase", () => {
     };
 
     // execute the usecase
-    usecase.setRequestParam({ configFilePath, installOptions: { install: true, packageManager: "yarn" }, devDependencies: true });
-    const response = await usecase.execute();
+    usecase.setRequestParam({ configFilePath, installOptions: { install: false, packageManager: "yarn" }, devDependencies: true });
+    let response = await usecase.execute();
     assert.isTrue(response.success, `The usecase failed!: ${(response as ErrorResponseEntity).errorCode}`);
+    response = response as MergeDependenciesResponseEntity;
+    assert.strictEqual(response.payload.ignoredProjects.length, 0, "Projects were ignored!");
 
     // verify the dependencies were merged into the main package.json file
     const mainPackageJsonRaw = await readFile(mainPackageJsonPath, { encoding: "utf-8" });

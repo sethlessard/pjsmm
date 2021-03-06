@@ -34,7 +34,7 @@ class ValidateConfigurationFileUseCase
         return { success: false, errorCode: ErrorCode.CONFIG_EMPTY_FILE };
       }
     } catch (error) {
-      return { success: false, error, errorCode: ErrorCode.CONFIG_NO_FILE };
+      return { success: false, error, errorCode: ErrorCode.CONFIG_READ_ERROR };
     }
 
     // validate the file

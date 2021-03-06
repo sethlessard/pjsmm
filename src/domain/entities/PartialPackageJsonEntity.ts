@@ -3,7 +3,7 @@
  * package.json dependency entry.
  *  { "package": "version" }
  */
-export type Dependency = { [name: string]: string };
+export type DependencyDefinition = { [name: string]: string };
 
 export interface PartialPackageJsonEntity {
 
@@ -20,10 +20,10 @@ export interface PartialPackageJsonEntity {
     /**
      * The dependencies
      */
-    dependencies: Dependency[];
+    dependencies: DependencyDefinition;
 
     /**
      * The development dependencies
      */
-    devDependencies: Dependency[];
+    devDependencies: DependencyDefinition;
 }

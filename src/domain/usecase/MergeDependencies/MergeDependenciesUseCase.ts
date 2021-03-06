@@ -50,7 +50,7 @@ export class MergeDependenciesUseCase extends UseCase<MergeDependenciesRequestEn
         return { success: false, errorCode: ErrorCode.CONFIG_EMPTY_FILE };
       }
     } catch (error) {
-      return { success: false, error, errorCode: ErrorCode.CONFIG_NO_FILE };
+      return { success: false, error, errorCode: ErrorCode.CONFIG_READ_ERROR };
     }
 
     // validate the config file
@@ -61,8 +61,8 @@ export class MergeDependenciesUseCase extends UseCase<MergeDependenciesRequestEn
 
     // verify there is a package.json at the same level of the configuation
     const projectRoot: string = dirname(configuration.filePath);
-    const packageJson = await this.packageJsonService.readPackageJson(projectRoot);
-    if (!packageJson) {
+    const mainPackageJson = await this.packageJsonService.readPackageJson(projectRoot);
+    if (!mainPackageJson) {
       return { success: false, errorCode: ErrorCode.NO_PACKAGE_JSON };
     }
 
@@ -103,10 +103,13 @@ export class MergeDependenciesUseCase extends UseCase<MergeDependenciesRequestEn
 
     // merge all package.json dependencies 
     const mergeResult = mergeDependencies(packageJsonFiles, devDependencies);
-    packageJson.dependencies = mergeResult.dependencies;
+    mainPackageJson.dependencies = mergeResult.dependencies;
     if (mergeResult?.devDependencies) {
-      packageJson.devDependencies = mergeResult.devDependencies;
+      mainPackageJson.devDependencies = mergeResult.devDependencies;
     }
+
+    // write the merged package.json back to disk
+    await this.packageJsonService.writePackageJson(mainPackageJson, projectRoot);
 
     // TODO: move to its own unit
     if (installOptions && installOptions.install) {

@@ -36,7 +36,7 @@ suite("domain/usecase/ValidateConfigurationFileUseCase/ValidateConfigurationFile
     assert.isFalse(result.success);
 
     const errorResult = result as ErrorResponseEntity;
-    assert.strictEqual(errorResult.errorCode, ErrorCode.CONFIG_NO_FILE, "Wrong errorCode returned!");
+    assert.strictEqual(errorResult.errorCode, ErrorCode.CONFIG_READ_ERROR, "Wrong errorCode returned!");
 
     // it should also return an error object (a File IO error)
     assert.isDefined(errorResult.error);
@@ -128,7 +128,7 @@ suite("domain/usecase/ValidateConfigurationFileUseCase/ValidateConfigurationFile
     const result = await usecase.execute();
     assert.isFalse(result.success);
     const errorResult = result as ErrorResponseEntity;
-    assert.strictEqual(errorResult.errorCode, ErrorCode.CONFIG_BAD_JSON, "Wrong errorCode!");
+    assert.strictEqual(errorResult.errorCode, ErrorCode.CONFIG_READ_ERROR, "Wrong errorCode!");
     // an error object (File IO error) should be defined
     assert.isDefined(errorResult.error);
   });

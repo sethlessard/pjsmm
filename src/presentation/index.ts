@@ -37,7 +37,7 @@ async function main(args: Arguments) {
   switch (command) {
     case "merge":
       const mergeDependenciesUseCase = container.resolve(MergeDependenciesUseCase);
-      mergeDependenciesUseCase.setRequestParam({ configFilePath, devDependencies: !args.skipDev, install: args.i });
+      mergeDependenciesUseCase.setRequestParam({ configFilePath, devDependencies: !args.skipDev, installOptions: { install: args.i, packageManager: args.packageManager ?? "yarn" } });
 
       try {
         const response = await mergeDependenciesUseCase.execute();
@@ -89,8 +89,8 @@ function handleUseCaseError(response: ErrorResponseEntity) {
     case ErrorCode.CONFIG_INVALID_VERSION:
       writeError("Config. Error: Invalid 'version' property! Valid values are '1.0.0'.")
       break;
-    case ErrorCode.CONFIG_NO_FILE:
-      writeError(".mm.json configuration file not found..");
+    case ErrorCode.CONFIG_READ_ERROR:
+      writeError("Error reading the '.mm.json' configuration file!");
       break;
     case ErrorCode.CONFIG_NO_VERSION:
       writeError("Config. Error: No 'version' property!'")

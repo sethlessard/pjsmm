@@ -1,4 +1,4 @@
-import { ConfigurationFileEntity } from "../domain/entities/ConfigurationFileEntity";
+import { ConfigurationFileEntity } from "../../entities/ConfigurationFileEntity";
 
 export interface ConfigurationService {
 

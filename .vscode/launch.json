@@ -4,12 +4,13 @@
   // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
   "version": "0.2.0",
   "configurations": [
+
     {
       "name": "Integration Tests",
       "request": "launch",
       "runtimeArgs": [
         "run-script",
-        "test:integration"
+        "debug:integration"
       ],
       "runtimeExecutable": "npm",
       "skipFiles": [

@@ -6,7 +6,7 @@ export enum ErrorCode {
   /**
    * Occurs when a configuration file cannot be read
    */
-  CONFIG_NO_FILE = "CONFIG_NO_FILE",
+  CONFIG_READ_ERROR = "CONFIG_READ_ERROR",
   
   /**
    * Occurs when a configuration file is empty.

@@ -1,24 +1,19 @@
 import { tmpdir } from "os";
 import { join } from "path";
-import { mkdir } from "fs/promises";
+import { mkdir, writeFile } from "fs/promises";
 import { v4 as uuid } from "uuid";
 import rimraf from "rimraf";
 import { ConfigurationFileEntity } from "../../src/domain/entities/ConfigurationFileEntity";
 
 export class IntegrationHelper {
 
-  /**
-   * Create a test configuration file object.
-   * @param projects the projects to include
-   * @param testExtensionDirectory the directory of the test extension.
-   */
-  static createConfig(projects: string[] = [], testExtensionDirectory: string): ConfigurationFileEntity {
-    return {
-      version: "1.0.0",
-      projects: projects.map(p => ({ rootDir: p })),
-      filePath: join(testExtensionDirectory, ".mm.json")
-    };
-  }
+  static readonly DUMMY_TSCONFIG = {
+    compilerOptions: {
+      module: "commonjs",
+      noImplicitAny: true,
+      sourceMap: true
+    }
+  };
 
   /**
    * Cleanup a test directory.
@@ -35,6 +30,27 @@ export class IntegrationHelper {
         }
       });
     })
+  }
+
+  /**
+   * Create a test configuration file object.
+   * @param projects the projects to include
+   * @param testExtensionDirectory the directory of the test extension.
+   */
+  static createConfig(projects: string[] = [], testExtensionDirectory: string): ConfigurationFileEntity {
+    return {
+      version: "1.0.0",
+      projects: projects.map(p => ({ rootDir: p })),
+      filePath: join(testExtensionDirectory, ".mm.json")
+    };
+  }
+
+  /**
+   * Create a dummy tsconfig.json file and place it in the specified root directory.
+   * @param rootDir the root directory to place the tsconfig.json file.
+   */
+  static createDummyTSConfig(rootDir: string): Promise<void> {
+    return writeFile(join(rootDir, "tsconfig.json"), JSON.stringify(IntegrationHelper.DUMMY_TSCONFIG), { encoding: "utf-8" });
   }
 
   /**
