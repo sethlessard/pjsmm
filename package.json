@@ -1,9 +1,9 @@
 {
-  "name": "mm-ts",
+  "name": "ts-prm",
   "version": "1.0.0",
   "description": "CLI application to manage dependencies required by typescript sub-projects in a main project package.json",
   "bin": {
-    "mm-ts": "./lib/index.js"
+    "ts-prm": "./lib/index.js"
   },
   "main": "./lib/index.js",
   "scripts": {
@@ -48,7 +48,6 @@
     "chalk": "4.1.0",
     "lodash": "4.17.21",
     "reflect-metadata": "0.1.13",
-    "regenerator-runtime": "0.13.7",
     "tsyringe": "4.4.0",
     "uuid": "8.3.2",
     "yargs": "16.2.0"

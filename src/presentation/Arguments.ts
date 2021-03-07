@@ -2,13 +2,29 @@ import { Arguments as YArguments } from "yargs";
 
 export type Command = "merge" | "validate";
 
-export interface Arguments extends YArguments {
+interface PJSMMArguments extends YArguments {
+
+  /**
+   * The positional arguments
+   */
+  _: [command: Command];
+}
+
+interface HasConfigFile {
+
+  /**
+   * The path to the configuration file.
+   */
+  configFile: string;
+}
+
+export interface MergeArguments extends PJSMMArguments, HasConfigFile {
 
   /**
    * Install flag. If set, the dependencies will be installed 
    * in the main project.
    */
-  i: boolean;
+  install: boolean;
 
   /**
    * If true, development dependencies will be skipped.
@@ -23,5 +39,15 @@ export interface Arguments extends YArguments {
   /**
    * The positional arguments
    */
-  _: [command: Command, configurationFile: string];
+  _: ["merge"];
 }
+
+export interface ValidateArguments extends PJSMMArguments, HasConfigFile {
+
+  /**
+   * The positional arguments
+   */
+  _: ["validate"];
+}
+
+export type Arguments = MergeArguments | ValidateArguments;

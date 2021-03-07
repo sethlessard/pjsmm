@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 import "reflect-metadata";
-import "regenerator-runtime/runtime";
 
 import { container } from "tsyringe";
 const chalk = require("chalk");
@@ -12,7 +11,7 @@ import { ConfigurationServiceImpl } from "../data/datasources/service/Configurat
 import { ErrorCode } from "../domain/entities/ErrorCode";
 import { ErrorResponseEntity } from "../domain/entities/ErrorResponseEntity";
 import { ValidateConfigurationFileUseCase } from "../domain/usecase/ValidateConfigurationFile/ValidateConfigurationFileUseCase";
-import { Arguments } from "./Arguments";
+import { Arguments, MergeArguments, ValidateArguments } from "./Arguments";
 import { MergeDependenciesUseCase } from "../domain/usecase/MergeDependencies/MergeDependenciesUseCase";
 import { Serializable } from "child_process";
 
@@ -23,23 +22,30 @@ container.register("TSConfigService", { useValue: TSConfigServiceImpl });
 
 // create the yargs instance
 const yargsInstance = yargs(process.argv.slice(2))
-  .options({
-    i: { type: "boolean", default: false, description: "Install node dependencies after merging the typescript submodules." },
+  .command("validate", "Validate a configuration file")
+  .command("merge", "Merge the dependencies of one or more subprojects (TypeScript project references) into a single top-level package.json file", {
+    install: { type: "boolean", alias: "i", default: false, description: "Install node dependencies after merging the typescript submodules." },
     skipDev: { type: "boolean", default: false, description: "If true, development dependencies will not be merged." },
     packageManager: { type: "string", default: "yarn", description: "The node_modules package manager to use for dependency installation.", choices: ["yarn", "npm"] }
-  });
+  })
+  .options({
+    configFile: { type: "string", alias: ["config", "c"], description: "The path to the tsprm config file (.mm.json)" }
+  })
+  .demandCommand(1, "Specify a command. -h for help.");
 
+// TODO: types for ValidateArguments and MergeArguments
 /**
  * The main entrypoint.
  * @param args the command line arguments.
  */
 async function main(args: Arguments): Promise<void> {
-  const [command, configFilePath] = args._;
+  const [command] = args._;
 
   switch (command) {
   case "merge": {
+    args = args as MergeArguments;
     const mergeDependenciesUseCase = container.resolve(MergeDependenciesUseCase);
-    mergeDependenciesUseCase.setRequestParam({ configFilePath, devDependencies: !args.skipDev, installOptions: { install: args.i, packageManager: args.packageManager ?? "yarn" } });
+    mergeDependenciesUseCase.setRequestParam({ configFilePath: args.configFile, devDependencies: !args.skipDev, installOptions: { install: args.install, packageManager: args.packageManager ?? "yarn" } });
 
     try {
       const response = await mergeDependenciesUseCase.execute();
@@ -69,8 +75,9 @@ async function main(args: Arguments): Promise<void> {
     break;
   }
   case "validate": {
+    args = args as ValidateArguments;
     const validateConfigFileUseCase = container.resolve(ValidateConfigurationFileUseCase);
-    validateConfigFileUseCase.setRequestParam({ configurationFilePath: configFilePath });
+    validateConfigFileUseCase.setRequestParam({ configurationFilePath: args.configFile });
 
     try {
       const response = await validateConfigFileUseCase.execute();
