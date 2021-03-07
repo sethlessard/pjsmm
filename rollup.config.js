@@ -1,5 +1,6 @@
 import { nodeResolve } from "@rollup/plugin-node-resolve";
-import babel from "@rollup/plugin-babel";
+import ts from "@wessberg/rollup-plugin-ts";
+import shebang from "rollup-plugin-add-shebang";
 import pkg from "./package.json";
 
 const extensions = [
@@ -12,11 +13,13 @@ export default {
   external: [],
   plugins: [
     nodeResolve({ extensions }),
-    babel({
-      extensions,
-      babelHelpers: "bundled",
-      include: ["src/**/*"]
-    })
+    ts({
+      tsconfig: "tsconfig.json"
+      
+    }),
+    shebang({
+      include: pkg.main
+    }),
   ],
   output: [{
     file: pkg.main,

@@ -14,6 +14,7 @@ import { ErrorResponseEntity } from "../domain/entities/ErrorResponseEntity";
 import { ValidateConfigurationFileUseCase } from "../domain/usecase/ValidateConfigurationFile/ValidateConfigurationFileUseCase";
 import { Arguments } from "./Arguments";
 import { MergeDependenciesUseCase } from "../domain/usecase/MergeDependencies/MergeDependenciesUseCase";
+import { Serializable } from "child_process";
 
 // setup dependency injection
 container.register("ConfigurationService", { useValue: ConfigurationServiceImpl });
@@ -47,7 +48,20 @@ async function main(args: Arguments): Promise<void> {
         return;
       }
 
-      console.log(chalk.green("Done."));
+      if (response.payload.installProcess) {
+        response.payload.installProcess.on("message", (message: Serializable) => console.log(`[STDOUT] ${message.toString()}`));
+        response.payload.installProcess.on("error", (err) => console.log(`[ERROR] ${err}`));
+        response.payload.installProcess.on("close", (result: number) => {
+          if (result === 0 || result === null) {
+            console.log(chalk.green("Done."));
+          } else {
+            console.log(`Ruh roh! The install process exited with code '${result}'`);
+            process.exit(result);
+          }
+        });
+      } else {
+        console.log(chalk.green("Done."));
+      }
     } catch (error) {
       handleUseCaseError(error);
       return;

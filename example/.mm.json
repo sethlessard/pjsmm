@@ -1,0 +1,14 @@
+{
+  "version": "1.0.0",
+  "projects": [
+    {
+      "rootDir": "project1"
+    },
+    {
+      "rootDir": "project2"
+    },
+    {
+      "rootDir": "project3"
+    }
+  ]
+}
