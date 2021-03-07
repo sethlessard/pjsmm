@@ -41,7 +41,7 @@ steps:
     condition: always()
     inputs:
       targetType: "inline"
-      script: "yarn test:unit"
+      script: "./scripts/test-unit.sh -c"
 
   - task: PublishTestResults@2
     displayName: "Publish Unit Test Results"
@@ -62,7 +62,7 @@ steps:
     condition: always()
     inputs:
       targetType: "inline"
-      script: "yarn test:integration"
+      script: "./scripts/test-integration.sh -c"
 
   - task: PublishTestResults@2
     displayName: "Publish Integration Test Results"
@@ -83,7 +83,7 @@ steps:
     condition: always()
     inputs:
       targetType: "inline"
-      script: "yarn test:e2e:ci"
+      script: "./scripts/test-e2e.sh -c"
 
   - task: PublishTestResults@2
     displayName: "Publish e2e Test Results"
