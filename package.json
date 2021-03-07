@@ -12,13 +12,15 @@
     "start": "yarn compile && node ./lib/index.js",
     "clean": "rimraf lib/",
     "lint": "eslint src/; eslint test/",
-    "test": "yarn lint; yarn test:unit; yarn test:integration",
+    "test": "yarn lint; yarn test:unit; yarn test:integration; yarn test:e2e",
     "test:unit": "nyc mocha --require ts-node/register --require source-map-support/register --reporter mocha-junit-reporter --extensions ts -- 'test/unit/**/*.ts'",
     "debug:unit": "mocha inspect --require ts-node/register --extensions ts --watch --watch-files src/,test/ -- 'test/unit/**/*.ts'",
     "test:unit:watch": "mocha --require ts-node/register --extensions ts --watch --watch-files src/,test/ -- 'test/unit/**/*.ts'",
     "test:integration": "nyc mocha --require ts-node/register --require source-map-support/register --reporter mocha-junit-reporter --extensions ts -- 'test/integration/**/*.ts'",
     "debug:integration": "mocha --inspect --require ts-node/register --extensions ts --watch --watch-files src/,test/ -- 'test/integration/**/*.ts'",
-    "test:integration:watch": "mocha --require ts-node/register --extensions ts --watch --watch-files src/,test/ -- 'test/integration/**/*.ts'"
+    "test:integration:watch": "mocha --require ts-node/register --extensions ts --watch --watch-files src/,test/ -- 'test/integration/**/*.ts'",
+    "test:e2e": "yarn compile && mocha --require ts-node/register --extensions ts --timeout 120000 -- 'test/e2e/**/*.ts'",
+    "test:e2e:ci": "yarn compile && mocha --require ts-node/register --extensions ts --timeout 120000 --reporter mocha-junit-reporter -- 'test/e2e/**/*.ts'"
   },
   "nyc": {
     "extension": [

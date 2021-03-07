@@ -77,3 +77,17 @@ steps:
     inputs:
       codeCoverageTool: "Cobertura"
       summaryFileLocation: "coverage/cobertura-coverage.xml"
+
+  - task: Bash@3
+    displayName: "Run e2e Tests"
+    condition: always()
+    inputs:
+      targetType: "inline"
+      script: "yarn test:e2e:ci"
+
+  - task: PublishTestResults@2
+    displayName: "Publish e2e Test Results"
+    condition: always()
+    inputs:
+      testRunner: JUnit
+      testResultsFiles: '**/test-results.xml'
