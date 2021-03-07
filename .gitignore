@@ -4,3 +4,4 @@ lib
 build
 .nyc_output
 coverage
+*.xunit.xml

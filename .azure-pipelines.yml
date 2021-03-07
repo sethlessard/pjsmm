@@ -43,12 +43,19 @@ steps:
       targetType: "inline"
       script: "yarn test:unit"
 
+  - task: PublishTestResults@1
+    displayName: "Publish Unit Test Results"
+    condition: always()
+    inputs:
+      testRunner: "XUnit"
+      testResultsFiles: "unit.xunit.xml"
+
   - task: PublishCodeCoverageResults@1
     condition: always()
     displayName: "Publish Unit Tests Code Coverage"
     inputs:
-      codeCoverageTool: 'Cobertura'
-      summaryFileLocation: 'coverage/cobertura-coverage.xml'
+      codeCoverageTool: "Cobertura"
+      summaryFileLocation: "coverage/cobertura-coverage.xml"
 
   - task: Bash@3
     displayName: "Run Integration Tests"
@@ -57,9 +64,16 @@ steps:
       targetType: "inline"
       script: "yarn test:integration"
 
+  - task: PublishTestResults@1
+    displayName: "Publish Integration Test Results"
+    condition: always()
+    inputs:
+      testRunner: "XUnit"
+      testResultsFiles: "integration.xunit.xml"
+
   - task: PublishCodeCoverageResults@1
     condition: always()
     displayName: "Publish Integration Tests Code Coverage"
     inputs:
-      codeCoverageTool: 'Cobertura'
-      summaryFileLocation: 'coverage/cobertura-coverage.xml'
+      codeCoverageTool: "Cobertura"
+      summaryFileLocation: "coverage/cobertura-coverage.xml"
