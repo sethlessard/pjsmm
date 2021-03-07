@@ -5,6 +5,7 @@
     ],
     "plugins": [
         ["@babel/plugin-proposal-decorators", { "legacy": true }],
-        "babel-plugin-parameter-decorator"
+        "babel-plugin-parameter-decorator",
+        "@babel/plugin-proposal-class-properties"
     ]
 }
