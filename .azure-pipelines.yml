@@ -42,14 +42,13 @@ steps:
     inputs:
       targetType: "inline"
       script: "yarn test:unit"
-      workingDirectory: Agent.WorkFolder
 
   - task: PublishTestResults@2
     displayName: "Publish Unit Test Results"
     condition: always()
     inputs:
       testResultsFormat: "XUnit"
-      testResultsFiles: "./unit.xunit.xml"
+      testResultsFiles: "unit.xunit.xml"
 
   - task: PublishCodeCoverageResults@1
     condition: always()
@@ -70,7 +69,7 @@ steps:
     condition: always()
     inputs:
       testResultsFormat: "XUnit"
-      testResultsFiles: "./integration.xunit.xml"
+      testResultsFiles: "integration.xunit.xml"
 
   - task: PublishCodeCoverageResults@1
     condition: always()
