@@ -47,8 +47,8 @@ steps:
     displayName: "Publish Unit Test Results"
     condition: always()
     inputs:
-      testResultsFormat: "XUnit"
-      testResultsFiles: "unit.xunit.xml"
+      testRunner: JUnit
+      testResultsFiles: '**/test-results.xml'
 
   - task: PublishCodeCoverageResults@1
     condition: always()
@@ -68,8 +68,8 @@ steps:
     displayName: "Publish Integration Test Results"
     condition: always()
     inputs:
-      testResultsFormat: "XUnit"
-      testResultsFiles: "integration.xunit.xml"
+      testRunner: JUnit
+      testResultsFiles: '**/test-results.xml'
 
   - task: PublishCodeCoverageResults@1
     condition: always()
