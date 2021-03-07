@@ -3,25 +3,23 @@ import babel from "@rollup/plugin-babel";
 import pkg from "./package.json";
 
 const extensions = [
-    ".ts",
-    ".js"
+  ".ts",
+  ".js"
 ];
 
-const name = "PJSMM";
-
 export default {
-    input: "./src/presentation/index.ts",
-    external: [],
-    plugins: [
-        nodeResolve({ extensions }),
-        babel({
-            extensions,
-            babelHelpers: "bundled",
-            include: ["src/**/*"]
-        })
-    ],
-    output: [{
-        file: pkg.main,
-        format: "cjs"
-    }]
-}
+  input: "./src/presentation/index.ts",
+  external: [],
+  plugins: [
+    nodeResolve({ extensions }),
+    babel({
+      extensions,
+      babelHelpers: "bundled",
+      include: ["src/**/*"]
+    })
+  ],
+  output: [{
+    file: pkg.main,
+    format: "cjs"
+  }]
+};

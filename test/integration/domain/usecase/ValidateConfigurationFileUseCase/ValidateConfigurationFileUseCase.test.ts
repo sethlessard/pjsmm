@@ -17,7 +17,7 @@ suite("domain/usecase/ValidateConfigurationFileUseCase/ValidateConfigurationFile
   let configPath: string;
   let usecase: ValidateConfigurationFileUseCase;
   beforeEach(async () => {
-    testDirectory = await IntegrationHelper.getTestDirectory();
+    testDirectory = await IntegrationHelper.getTestDirectory(true);
     // setup dependency injection
     const configService: ConfigurationService = new ConfigurationServiceImpl();
     usecase = new ValidateConfigurationFileUseCase(configService);
@@ -25,7 +25,7 @@ suite("domain/usecase/ValidateConfigurationFileUseCase/ValidateConfigurationFile
   });
   afterEach(async () => {
     if (testDirectory) {
-      await IntegrationHelper.cleanupTestDirectory(testDirectory);
+      await IntegrationHelper.cleanupTestDirectory(testDirectory, true);
     }
     testDirectory = "";
   });

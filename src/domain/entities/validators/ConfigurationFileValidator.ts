@@ -2,8 +2,17 @@ import { ConfigurationFileEntity } from "../ConfigurationFileEntity";
 import { ErrorCode } from "../ErrorCode";
 import { ProjectEntity } from "../ProjectEntity";
 
-// TODO: test
 export class ConfigurationFileValidator {
+
+  private static readonly configurationFileProperties = [
+    "version",
+    "projects",
+    "filePath"
+  ];
+
+  private static readonly projectProperties = [
+    "rootDir"
+  ];
 
   /**
      * Check to see if there are excess properties in the configuration file.
@@ -13,17 +22,11 @@ export class ConfigurationFileValidator {
      */
   static areThereExcessProperties(configuration: ConfigurationFileEntity): boolean {
     const keys = Object.keys(configuration);
-    const versionIdx = keys.indexOf("version");
-    if (versionIdx !== -1) {
-      keys.splice(versionIdx, 1);
-    }
-    const projectsIdx = keys.indexOf("projects");
-    if (projectsIdx !== -1) {
-      keys.splice(projectsIdx, 1);
-    }
-    const filePathIdx = keys.indexOf("filePath");
-    if (filePathIdx !== -1) {
-      keys.splice(filePathIdx);
+    for (const requiredproperty of ConfigurationFileValidator.configurationFileProperties) {
+      const idx = keys.indexOf(requiredproperty);
+      if (idx !== -1) {
+        keys.splice(idx, 1);
+      }
     }
     return keys.length > 0;
   }
@@ -37,9 +40,11 @@ export class ConfigurationFileValidator {
   static areThereExcessProjectProperties(projects: ProjectEntity[]): boolean {
     for (const project of projects) {
       const keys = Object.keys(project);
-      const pathIdx = keys.indexOf("rootDir");
-      if (pathIdx !== -1) {
-        keys.splice(pathIdx, 1);
+      for (const requiredproperty of ConfigurationFileValidator.projectProperties) {
+        const idx = keys.indexOf(requiredproperty);
+        if (idx !== -1) {
+          keys.splice(idx, 1);
+        }
       }
 
       if (keys.length > 0) { return true; }
@@ -47,6 +52,7 @@ export class ConfigurationFileValidator {
     return false;
   }
 
+  // TODO: test
   /**
      * 
      * @param configuration the configuration file to validate.

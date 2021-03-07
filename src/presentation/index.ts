@@ -29,10 +29,10 @@ const yargsInstance = yargs(process.argv.slice(2))
   });
 
 /**
- * Main.
+ * The main entrypoint.
  * @param args the command line arguments.
  */
-async function main(args: Arguments) {
+async function main(args: Arguments): Promise<void> {
   const [command, configFilePath] = args._;
 
   switch (command) {
@@ -125,6 +125,5 @@ function readArugments(): Arguments {
   return (yargsInstance.argv as unknown) as Arguments;
 }
 
+// run the program 
 main(readArugments());
-
-

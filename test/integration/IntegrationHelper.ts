@@ -18,14 +18,17 @@ export class IntegrationHelper {
   /**
    * Cleanup a test directory.
    * @param directory the test directory.
+   * @param silent if true, no console output will occur.
    */
-  static cleanupTestDirectory(directory: string): Promise<void> {
+  static cleanupTestDirectory(directory: string, silent: boolean): Promise<void> {
     return new Promise((resolve, reject) => {
       rimraf(directory, (error: Error) => {
         if (error) {
           reject(error);
         } else {
-          console.log(`Cleaned test directory: "${directory}"`);
+          if (!silent) {
+            console.log(`Cleaned test directory: "${directory}"`);
+          }
           resolve();
         }
       });
@@ -55,12 +58,15 @@ export class IntegrationHelper {
 
   /**
    * Get a directory on the local filesystem that can be used for testing.
+   * @param silent if set, no console output will occur.
    */
-  static getTestDirectory(): Promise<string> {
+  static getTestDirectory(silent: boolean): Promise<string> {
     const directory = join(tmpdir(), "package-json-submodule-merge-tests", uuid());
     return mkdir(directory, { recursive: true })
       .then(() => {
-        console.log(`Created test directory: "${directory}"`);
+        if (!silent) {
+          console.log(`Created test directory: "${directory}"`);
+        }
         return directory;
       });
   }
