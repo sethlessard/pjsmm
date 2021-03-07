@@ -23,6 +23,7 @@ steps:
       script: "yarn"
   
   - task: Bash@3
+    continueOnError: true
     displayName: "Lint"
     inputs:
       targetType: "inline"
@@ -30,18 +31,35 @@ steps:
   
   - task: Bash@3
     displayName: "Build"
+    continueOnError: true
     inputs:
       targetType: "inline"
       script: "yarn compile"
   
   - task: Bash@3
     displayName: "Run Unit Tests"
+    condition: always()
     inputs:
       targetType: "inline"
       script: "yarn test:unit"
 
+  - task: PublishCodeCoverageResults@1
+    condition: always()
+    displayName: "Publish Unit Tests Code Coverage"
+    inputs:
+      codeCoverageTool: 'Cobertura'
+      summaryFileLocation: 'coverage/cobertura-coverage.xml'
+
   - task: Bash@3
     displayName: "Run Integration Tests"
+    condition: always()
     inputs:
       targetType: "inline"
       script: "yarn test:integration"
+
+  - task: PublishCodeCoverageResults@1
+    condition: always()
+    displayName: "Publish Integration Tests Code Coverage"
+    inputs:
+      codeCoverageTool: 'Cobertura'
+      summaryFileLocation: 'coverage/cobertura-coverage.xml'
