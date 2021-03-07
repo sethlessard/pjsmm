@@ -38,7 +38,6 @@ function _mergeDependencies(allDependencies: DependencyDefinition[]): Dependency
   }, {});
 }
 
-// TODO: test
 /**
  * Merge the dependencies
  * @param packages the package.json files.

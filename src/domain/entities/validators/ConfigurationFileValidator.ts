@@ -15,11 +15,11 @@ export class ConfigurationFileValidator {
   ];
 
   /**
-     * Check to see if there are excess properties in the configuration file.
-     * @param configuration the configuration file.
-     * @returns true if there are excess properties.
-     * @returns false if not.
-     */
+   * Check to see if there are excess properties in the configuration file.
+   * @param configuration the configuration file.
+   * @returns true if there are excess properties.
+   * @returns false if not.
+   */
   static areThereExcessProperties(configuration: ConfigurationFileEntity): boolean {
     const keys = Object.keys(configuration);
     for (const requiredproperty of ConfigurationFileValidator.configurationFileProperties) {
@@ -32,11 +32,11 @@ export class ConfigurationFileValidator {
   }
 
   /**
-     * Check to see if there are excess properties in the configuration file.
-     * @param configuration the configuration file.
-     * @returns true if there are excess properties.
-     * @returns false if the entires are valid.
-     */
+   * Check to see if there are excess properties in the configuration file.
+   * @param configuration the configuration file.
+   * @returns true if there are excess properties.
+   * @returns false if the entires are valid.
+   */
   static areThereExcessProjectProperties(projects: ProjectEntity[]): boolean {
     for (const project of projects) {
       const keys = Object.keys(project);
@@ -52,13 +52,12 @@ export class ConfigurationFileValidator {
     return false;
   }
 
-  // TODO: test
   /**
-     * 
-     * @param configuration the configuration file to validate.
-     * @returns an ErrorCode if the configuraiton file contains an error.
-     * @returns undefined if the configuration file is valid
-     */
+   * Validate a configuration file.
+   * @param configuration the configuration file to validate.
+   * @returns an ErrorCode if the configuraiton file contains an error.
+   * @returns undefined if the configuration file is valid
+   */
   static validate(configuration: ConfigurationFileEntity): ErrorCode | undefined {
     // there must be a version
     if (!configuration.version) {

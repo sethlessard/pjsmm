@@ -17,7 +17,6 @@ import { MergeDependenciesResponseEntity } from "./MergeDependenciesResponseEnti
 import { ConfigurationFileValidator } from "../../entities/validators/ConfigurationFileValidator";
 import { mergeDependencies } from "./helpers/mergeDependencies";
 
-// TODO: test
 @injectable()
 export class MergeDependenciesUseCase extends UseCase<MergeDependenciesRequestEntity, MergeDependenciesResponseEntity> {
 
