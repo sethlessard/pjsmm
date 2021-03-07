@@ -11,13 +11,13 @@ suite("mm-ts validate", () => {
 
   let testDirectory: string;
   beforeEach(async () => {
-    testDirectory = await e2eHelper.getTestDirectory(false);
+    testDirectory = await e2eHelper.getTestDirectory();
   });
 
   afterEach(async () => {
-    // if (testDirectory) {
-    //   await e2eHelper.cleanupTestDirectory(testDirectory);
-    // }
+    if (testDirectory) {
+      await e2eHelper.cleanupTestDirectory(testDirectory);
+    }
   });
 
   test("It should throw an error if a configuration file was not found.", (done: Done) => {

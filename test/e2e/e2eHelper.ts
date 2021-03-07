@@ -119,9 +119,11 @@ export class e2eHelper {
    * @param testDirectory setup a ValidateConfig test directory.
    * @param template the ValidateConfigurationTemplate to use.
    */
-  static setupValidateConfigTestDirectory(testDirectory: string, template: ValidateConfigTemplate): void {
+  static setupValidateConfigTestDirectory(testDirectory: string, template: ValidateConfigTemplate, silent = true): void {
     const templatePath = ValidateConfigurationTemplate.getTemplatePath(template);
-    console.log(`Copying template files from '${templatePath}' to '${testDirectory}'`);
+    if (!silent) {
+      console.log(`Copying template files from '${templatePath}' to '${testDirectory}'`);
+    }
     return copySync(templatePath, testDirectory, { recursive: true });
   }
 }
