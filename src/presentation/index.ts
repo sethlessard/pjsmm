@@ -16,9 +16,9 @@ import { MergeDependenciesUseCase } from "../domain/usecase/MergeDependencies/Me
 import { Serializable } from "child_process";
 
 // setup dependency injection
-container.register("ConfigurationService", { useValue: ConfigurationServiceImpl });
-container.register("PackageJsonService", { useValue: PackageJsonServiceImpl });
-container.register("TSConfigService", { useValue: TSConfigServiceImpl });
+container.register("ConfigurationService", { useClass: ConfigurationServiceImpl });
+container.register("PackageJsonService", { useClass: PackageJsonServiceImpl });
+container.register("TSConfigService", { useClass: TSConfigServiceImpl });
 
 // create the yargs instance
 const yargsInstance = yargs(process.argv.slice(2))
@@ -33,7 +33,6 @@ const yargsInstance = yargs(process.argv.slice(2))
   })
   .demandCommand(1, "Specify a command. -h for help.");
 
-// TODO: types for ValidateArguments and MergeArguments
 /**
  * The main entrypoint.
  * @param args the command line arguments.
@@ -113,7 +112,7 @@ function handleUseCaseError(response: ErrorResponseEntity) {
     writeError("Config. Error: Invalid 'version' property! Valid values are '1.0.0'.");
     break;
   case ErrorCode.CONFIG_READ_ERROR:
-    writeError("Could not read the '.mm.json' configuration file!");
+    writeError("Could not read the '.mm.json' configuration file!: " + response.error);
     break;
   case ErrorCode.CONFIG_NO_VERSION:
     writeError("Config. Error: No 'version' property!'");

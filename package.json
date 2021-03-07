@@ -21,8 +21,9 @@
     "test:integration:ci": "nyc mocha --require ts-node/register --require source-map-support/register --reporter mocha-junit-reporter --extensions ts -- 'test/integration/**/*.ts'",
     "debug:integration": "mocha --inspect --require ts-node/register --extensions ts --watch --watch-files src/,test/ -- 'test/integration/**/*.ts'",
     "test:integration:watch": "mocha --require ts-node/register --extensions ts --watch --watch-files src/,test/ -- 'test/integration/**/*.ts'",
-    "test:e2e": "yarn compile && mocha --require ts-node/register --extensions ts --timeout 120000 -- 'test/e2e/**/*.ts'",
-    "test:e2e:ci": "yarn compile && mocha --require ts-node/register --extensions ts --timeout 120000 --reporter mocha-junit-reporter -- 'test/e2e/**/*.ts'"
+    "debug:e2e": "yarn compile && mocha --inspect --require ts-node/register --extensions ts --timeout 120000 -- 'test/e2e/**/*.e2e.test.ts'",
+    "test:e2e": "yarn compile && mocha --require ts-node/register --extensions ts --timeout 120000 -- 'test/e2e/**/*.e2e.test.ts'",
+    "test:e2e:ci": "yarn compile && mocha --require ts-node/register --extensions ts --timeout 120000 --reporter mocha-junit-reporter -- 'test/e2e/**/*.e2e.test.ts'"
   },
   "nyc": {
     "extension": [
@@ -48,6 +49,7 @@
   "dependencies": {
     "boxen": "5.0.0",
     "chalk": "4.1.0",
+    "fs-extra": "9.1.0",
     "lodash": "4.17.21",
     "reflect-metadata": "0.1.13",
     "tsyringe": "4.4.0",
@@ -58,6 +60,7 @@
     "@istanbuljs/nyc-config-typescript": "1.0.1",
     "@rollup/plugin-node-resolve": "11.2.0",
     "@types/chai": "4.2.15",
+    "@types/fs-extra": "9.0.8",
     "@types/lodash": "4.14.168",
     "@types/mocha": "8.2.1",
     "@types/rimraf": "3.0.0",
