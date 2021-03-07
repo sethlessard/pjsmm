@@ -1,20 +1,20 @@
-# TSPRM: TypeScript Project Reference Merge 
+# ts-prm: TypeScript Project Reference Merge 
 
 [![Build Status](https://dev.azure.com/sethlessard0602/sethlessard/_apis/build/status/sethlessard.pjsmm?branchName=v1.0.0-prep)](https://dev.azure.com/sethlessard0602/sethlessard/_build/latest?definitionId=6&branchName=v1.0.0-prep)
 
 This CLI application is a helper for TypeScript's project reference feature when using "sub-projects" (nested TypeScript projects). As of now, this is simply a proof of concept.
 
-- [TSPRM: TypeScript Project Reference Merge](#tsprm-typescript-project-reference-merge)
+- [ts-prm: TypeScript Project Reference Merge](#ts-prm-typescript-project-reference-merge)
   - [Why?](#why)
   - [Installation](#installation)
   - [Configuration File](#configuration-file)
     - [Example Configuration File](#example-configuration-file)
   - [Usage](#usage)
-    - [tsprm --help](#tsprm---help)
-    - [tsprm merge](#tsprm-merge)
-      - [tsprm merge --help](#tsprm-merge---help)
-    - [tsprm validate](#tsprm-validate)
-      - [tsprm validate --help](#tsprm-validate---help)
+    - [ts-prm --help](#ts-prm---help)
+    - [ts-prm merge](#ts-prm-merge)
+      - [ts-prm merge --help](#ts-prm-merge---help)
+    - [ts-prm validate](#ts-prm-validate)
+      - [ts-prm validate --help](#ts-prm-validate---help)
 
 ## Why?
 
@@ -57,23 +57,23 @@ main-project
 
 When building the project, a `dist/` or `build/` (or whatever you specify as the `outDir` in the top-level `tsconfig.json`) folder with the compiled JavaScript of all subprojects + the main project will be created. The JavaScript in the build folder is still referencing node_modules dependencies from the subprojects. The top level node_modules will not contain the subproject node_modules dependencies.
 
-`tsprm` tries to fix that issue by merging the `dependencies` and `devDependencies` fields of multiple subproject package.json files into a single top-level package.json file.
+`ts-prm` tries to fix that issue by merging the `dependencies` and `devDependencies` fields of multiple subproject package.json files into a single top-level package.json file.
 
 ## Installation 
 
 With npm:
 ```bash
-npm install -g tsprm
+npm install -g ts-prm
 ```
 
 with yarn
 ```bash
-yarn global add tsprm
+yarn global add ts-prm
 ```
 
 ## Configuration File
 
-`tsprm` depends on a configuration file that is placed in the root directory of your project. All paths within the configuration file will be relative to the configuration file. The `tsprm` configuraiton file will specify the TypeScript subprojects. The TypeScript subprojects must contain a `package.json` and `tsconfig.json` file.
+`ts-prm` depends on a configuration file that is placed in the root directory of your project. All paths within the configuration file will be relative to the configuration file. The `ts-prm` configuraiton file will specify the TypeScript subprojects. The TypeScript subprojects must contain a `package.json` and `tsconfig.json` file.
 
 ### Example Configuration File
 
@@ -96,7 +96,7 @@ yarn global add tsprm
 
 ## Usage 
 
-### tsprm --help
+### ts-prm --help
 
 ```bash
 ts-prm <command>
@@ -109,12 +109,12 @@ Commands:
 Options:
       --help                  Show help                                [boolean]
       --version               Show version number                      [boolean]
-  -c, --configFile, --config  The path to the tsprm config file (.mm.json)
+  -c, --configFile, --config  The path to the ts-prm config file (.mm.json)
                                                                         [string]
 ```
-### tsprm merge
+### ts-prm merge
 
-#### tsprm merge --help 
+#### ts-prm merge --help 
 
 ```bash
 ts-prm merge
@@ -125,7 +125,7 @@ references) into a single top-level package.json file
 Options:
       --help                  Show help                                [boolean]
       --version               Show version number                      [boolean]
-  -c, --configFile, --config  The path to the tsprm config file (.mm.json)
+  -c, --configFile, --config  The path to the ts-prm config file (.mm.json)
                                                                         [string]
   -i, --install               Install node dependencies after merging the
                               typescript submodules.  [boolean] [default: false]
@@ -136,9 +136,9 @@ Options:
                              [string] [choices: "yarn", "npm"] [default: "yarn"]
 ```
 
-### tsprm validate
+### ts-prm validate
 
-#### tsprm validate --help
+#### ts-prm validate --help
 
 ```bash
 ts-prm validate
@@ -148,7 +148,7 @@ Validate a configuration file
 Options:
       --help                  Show help                                [boolean]
       --version               Show version number                      [boolean]
-  -c, --configFile, --config  The path to the tsprm config file (.mm.json)
+  -c, --configFile, --config  The path to the ts-prm config file (.mm.json)
                                                                         [string]
 ```
 
