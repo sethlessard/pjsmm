@@ -15,7 +15,8 @@ export enum MergeDependenciesTemplate {
   ProjectWithNoProjectsProperty,
   ProjectWithNoSubprojects,
   ProjectWithNoConfigFile,
-  ProjectWithNoVersion
+  ProjectWithNoVersion,
+  ValidProjectWith3Subprojects
 }
 class MergeDependenciesTemplates {
   private static readonly ProjectWithExtraConfigProperty = join(MergeDependenciesTemplateRoot, "projectWithExtraConfigProperty");
@@ -24,6 +25,7 @@ class MergeDependenciesTemplates {
   private static readonly ProjectWithNoSubprojects = join(MergeDependenciesTemplateRoot, "projectWithNoSubprojects");
   private static readonly ProjectWithNoTemplateFile = join(MergeDependenciesTemplateRoot, "projectWithNoConfigFile");
   private static readonly ProjectWithNoVersion = join(MergeDependenciesTemplateRoot, "projectWithNoVersion");
+  private static readonly ValidProjectWith3Subprojects = join(MergeDependenciesTemplateRoot, "validProjectWith3Subprojects");
 
   /**
    * Get the path to a MergeDependencies e2e test template directory.
@@ -44,6 +46,8 @@ class MergeDependenciesTemplates {
       return MergeDependenciesTemplates.ProjectWithNoTemplateFile;
     case MergeDependenciesTemplate.ProjectWithNoVersion:
       return MergeDependenciesTemplates.ProjectWithNoVersion;
+    case MergeDependenciesTemplate.ValidProjectWith3Subprojects:
+      return MergeDependenciesTemplates.ValidProjectWith3Subprojects;
     }
   }
 }
