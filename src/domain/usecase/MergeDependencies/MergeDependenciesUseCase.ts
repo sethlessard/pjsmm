@@ -109,9 +109,15 @@ export class MergeDependenciesUseCase extends UseCase<MergeDependenciesRequestEn
 
     // merge all package.json dependencies 
     const mergeResult = mergeDependencies(packageJsonFiles, devDependencies);
-    mainPackageJson.dependencies = mergeResult.dependencies;
+    if (!mainPackageJson.dependencies) {
+      mainPackageJson.dependencies = {};
+    }
+    Object.assign(mainPackageJson.dependencies, mergeResult.dependencies);
     if (mergeResult?.devDependencies) {
-      mainPackageJson.devDependencies = mergeResult.devDependencies;
+      if (!mainPackageJson.devDependencies) {
+        mainPackageJson.devDependencies = {};
+      }
+      Object.assign(mainPackageJson.devDependencies, mergeResult.devDependencies);
     }
 
     // write the merged package.json back to disk

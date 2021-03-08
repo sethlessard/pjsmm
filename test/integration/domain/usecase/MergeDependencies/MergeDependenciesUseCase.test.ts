@@ -45,6 +45,18 @@ const PJ_MAIN = {
   author: "Tim",
   license: "MIT"
 };
+const PJ_MAIN_WITH_DEPS = {
+  name: "main",
+  version: "1.0.0",
+  author: "Tim",
+  license: "MIT",
+  dependencies: {
+    myDep: "1.0.0"
+  },
+  devDependencies: {
+    myDevDep: "1.1.0"
+  }
+};
 
 suite("domain/usecase/MergeDependencies/MergeDependenciesUseCase", () => {
 
@@ -199,5 +211,43 @@ suite("domain/usecase/MergeDependencies/MergeDependenciesUseCase", () => {
     assert.deepStrictEqual(mainPackageJson.dependencies, expectedDependencies, "Wrong dependencies in the main package.json!");
     assert.isDefined(response.payload.installProcess, "The install process was not defined!");
     response.payload.installProcess?.kill();
+  });
+
+  test("It should not remove pre-existing dependencies in the top-level package.json file.", async () => {
+    // write the test app.json files
+    const package1Path = path.join(testDirectory, "package1");
+    const package1PackageJsonPath = path.join(package1Path, "package.json");
+    const package2Path = path.join(testDirectory, "package2");
+    const package2PackageJsonPath = path.join(package2Path, "package.json");
+    await mkdir(package1Path);
+    await mkdir(package2Path);
+    await IntegrationHelper.createDummyTSConfig(package1Path);
+    await IntegrationHelper.createDummyTSConfig(package2Path);
+    await writeFile(package1PackageJsonPath, JSON.stringify(PJ_1), { encoding: "utf-8" });
+    await writeFile(package2PackageJsonPath, JSON.stringify(PJ_2), { encoding: "utf-8" });
+
+    // write the main project configuration file to use
+    const configFilePath = path.join(testDirectory, ".tsprm.json");
+    await writeFile(configFilePath, JSON.stringify(IntegrationHelper.createConfig(["package1", "package2"])), { encoding: "utf-8" });
+
+    // write the main project package.json
+    const mainPackageJsonPath = path.join(testDirectory, "package.json");
+    await writeFile(mainPackageJsonPath, JSON.stringify(PJ_MAIN_WITH_DEPS), { encoding: "utf-8" });
+
+    // execute the usecase
+    usecase.setRequestParam({ configFilePath, installOptions: { install: false, packageManager: "yarn" }, devDependencies: true });
+    let response = await usecase.execute();
+    assert.isTrue(response.success, `The usecase failed!: ${(response as ErrorResponseEntity).errorCode}`);
+    response = response as MergeDependenciesResponseEntity;
+    assert.strictEqual(response.payload.ignoredProjects.length, 0, "Projects were ignored!");
+
+    // verify the dependencies were merged into the main package.json file
+    const mainPackageJsonRaw = await readFile(mainPackageJsonPath, { encoding: "utf-8" });
+    assert.isDefined(mainPackageJsonRaw, "Empty main package.json!");
+    assert.isNotEmpty(mainPackageJsonRaw, "Empty main package.json!");
+
+    const mainPackageJson = JSON.parse(mainPackageJsonRaw);
+    assert.exists(mainPackageJson.dependencies["myDep"]);
+    assert.exists(mainPackageJson.devDependencies["myDevDep"]);
   });
 });
