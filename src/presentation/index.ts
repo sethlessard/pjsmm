@@ -13,7 +13,6 @@ import { ErrorResponseEntity } from "../domain/entities/ErrorResponseEntity";
 import { ValidateConfigurationFileUseCase } from "../domain/usecase/ValidateConfigurationFile/ValidateConfigurationFileUseCase";
 import { Arguments, MergeArguments, ValidateArguments } from "./Arguments";
 import { MergeDependenciesUseCase } from "../domain/usecase/MergeDependencies/MergeDependenciesUseCase";
-import { Serializable } from "child_process";
 
 // setup dependency injection
 container.register("ConfigurationService", { useClass: ConfigurationServiceImpl });
@@ -56,17 +55,21 @@ async function main(args: Arguments): Promise<void> {
       // output ignored projects
       if (response.payload.ignoredProjects.length > 0) {
         console.log(chalk.brightYellow("Ignored projects:"));
-        response.payload.ignoredProjects.forEach(p => chalk.yellow(p.rootDir));
+        response.payload.ignoredProjects.forEach(p => console.log(chalk.yellow(p.rootDir)));
       }
 
       // output merged projects
       if (response.payload.mergedProjects.length > 0) {
         console.log(chalk.green("Merged projects:"));
-        response.payload.mergedProjects.forEach(p => chalk.green(p.rootDir));
+        response.payload.mergedProjects.forEach(p => console.log(chalk.green(p.rootDir)));
       }
 
       if (response.payload.installProcess) {
-        response.payload.installProcess.on("message", (message: Serializable) => console.log(`[STDOUT] ${message.toString()}`));
+        console.log();
+        console.log("Installing dependencies...");
+        response.payload.installProcess.stdout?.on("data", (data: Buffer) => console.log(data.toString("utf-8").trim()));
+        response.payload.installProcess.stderr?.on("data", (data: Buffer) => console.log(data.toString("utf-8").trim()));
+
         response.payload.installProcess.on("error", (err) => console.log(`[ERROR] ${err}`));
         response.payload.installProcess.on("close", (result: number) => {
           if (result === 0 || result === null) {
@@ -80,7 +83,7 @@ async function main(args: Arguments): Promise<void> {
         console.log(chalk.green("Done."));
       }
     } catch (error) {
-      handleUseCaseError(error);
+      handleUseCaseError({ success: false, error, errorCode: ErrorCode.GENERAL });
       return;
     }
     break;
@@ -148,6 +151,10 @@ function handleUseCaseError(response: ErrorResponseEntity) {
     break;
   default:
     writeError("Implement the case you idiot." + response.errorCode);
+    if (response.error) {
+      writeError(response.error.message);
+    }
+    break;
   }
 }
 

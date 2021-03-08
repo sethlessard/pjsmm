@@ -2,6 +2,7 @@ import { afterEach, beforeEach, suite, test } from "mocha";
 import { exec } from "child_process";
 import { promisify } from "util";
 import { readFile } from "fs/promises";
+import { existsSync } from "fs";
 import { join, resolve } from "path";
 import { e2eHelper, MergeDependenciesTemplate } from "../e2eHelper";
 import { expect } from "chai";
@@ -115,7 +116,7 @@ suite("mm-ts merge", () => {
     // setup the test
     e2eHelper.setupMergeDependenciesTestDirectory(testDirectory, MergeDependenciesTemplate.ValidProjectWith3Subprojects);
 
-    const { stdout, stderr } = await pexec(`node lib/index.js merge --config ${join(testDirectory, ".mm.json")}`, { cwd: e2eHelper.getProjectRoot(), encoding: "utf-8" });
+    const { stdout, stderr } = await pexec(`node lib/index.js merge --config ${join(testDirectory, ".mm.json")} --skipDev`, { cwd: e2eHelper.getProjectRoot(), encoding: "utf-8" });
     expect(stderr).to.be.empty;
     expect(stdout).to.match(/Done./g, "Message did not match!");
 
@@ -135,7 +136,99 @@ suite("mm-ts merge", () => {
     expect(packageJson.devDependencies).to.eql({}, "devDependencies were populated!");
   });
 
-  test("It should be able to merge the development dependencies of more than one TypeScript project.");
-  test("It should be able to install the depdencies after merging.");
-  test("It should be able to install the dependencies using a custom-specified package manager");
+  test("It should be able to merge the development dependencies of more than one TypeScript project.", async () => {
+    // setup the test
+    e2eHelper.setupMergeDependenciesTestDirectory(testDirectory, MergeDependenciesTemplate.ValidProjectWith3Subprojects);
+
+    const { stdout, stderr } = await pexec(`node lib/index.js merge --config ${join(testDirectory, ".mm.json")}`, { cwd: e2eHelper.getProjectRoot(), encoding: "utf-8" });
+    expect(stderr).to.be.empty;
+    expect(stdout).to.match(/Done./g, "Message did not match!");
+    
+    // read the package.json file
+    const packageJsonRaw = await readFile(join(testDirectory, "package.json"), { encoding: "utf8" });
+    expect(packageJsonRaw).to.not.be.undefined.and.to.not.be.empty;
+    
+    const expectedDependencies: DependencyDefinition = {
+      "body-parser": "1.19.0",
+      express: "4.17.1",
+      "reflect-metadata": "0.1.13",
+      typeorm: "0.2.31"
+    };
+    const expectedDevDependencies: DependencyDefinition = {
+      "@types/chai": "4.2.15",
+      "@types/mocha": "8.2.1",
+      chai: "4.3.3",
+      mocha: "8.3.1"
+    };
+    
+    const packageJson: PartialPackageJsonEntity = JSON.parse(packageJsonRaw);
+    expect(packageJson.dependencies).to.eql(expectedDependencies, "Wrong dependencies!");
+    expect(packageJson.devDependencies).to.eql(expectedDevDependencies, "Wrong devDependencies!");
+  });
+
+  test("It should be able to install the dependencies after merging.", async () => {
+    // setup the test
+    e2eHelper.setupMergeDependenciesTestDirectory(testDirectory, MergeDependenciesTemplate.ValidProjectWith3Subprojects);
+
+    const { stdout, stderr } = await pexec(`node lib/index.js merge --config ${join(testDirectory, ".mm.json")} --install`, { cwd: e2eHelper.getProjectRoot(), encoding: "utf-8" });
+    expect(stderr).to.be.empty;
+    expect(stdout).to.match(/Done./g, "Message did not match!");
+    
+    // read the package.json file
+    const packageJsonRaw = await readFile(join(testDirectory, "package.json"), { encoding: "utf8" });
+    expect(packageJsonRaw).to.not.be.undefined.and.to.not.be.empty;
+    
+    const expectedDependencies: DependencyDefinition = {
+      "body-parser": "1.19.0",
+      express: "4.17.1",
+      "reflect-metadata": "0.1.13",
+      typeorm: "0.2.31"
+    };
+    const expectedDevDependencies: DependencyDefinition = {
+      "@types/chai": "4.2.15",
+      "@types/mocha": "8.2.1",
+      chai: "4.3.3",
+      mocha: "8.3.1"
+    };
+    
+    const packageJson: PartialPackageJsonEntity = JSON.parse(packageJsonRaw);
+    expect(packageJson.dependencies).to.eql(expectedDependencies, "Wrong dependencies!");
+    expect(packageJson.devDependencies).to.eql(expectedDevDependencies, "Wrong devDependencies!");
+
+    expect(existsSync(join(testDirectory, "node_modules"))).to.be.true;
+    expect(existsSync(join(testDirectory, "yarn.lock"))).to.be.true;
+  });
+
+  test("It should be able to install the dependencies using a custom-specified package manager", async () => {
+    // setup the test
+    e2eHelper.setupMergeDependenciesTestDirectory(testDirectory, MergeDependenciesTemplate.ValidProjectWith3Subprojects);
+
+    const { stdout, stderr } = await pexec(`node lib/index.js merge --config ${join(testDirectory, ".mm.json")} --install --packageManager npm`, { cwd: e2eHelper.getProjectRoot(), encoding: "utf-8" });
+    expect(stderr).to.be.empty;
+    expect(stdout).to.match(/Done./g, "Message did not match!");
+        
+    // read the package.json file
+    const packageJsonRaw = await readFile(join(testDirectory, "package.json"), { encoding: "utf8" });
+    expect(packageJsonRaw).to.not.be.undefined.and.to.not.be.empty;
+        
+    const expectedDependencies: DependencyDefinition = {
+      "body-parser": "1.19.0",
+      express: "4.17.1",
+      "reflect-metadata": "0.1.13",
+      typeorm: "0.2.31"
+    };
+    const expectedDevDependencies: DependencyDefinition = {
+      "@types/chai": "4.2.15",
+      "@types/mocha": "8.2.1",
+      chai: "4.3.3",
+      mocha: "8.3.1"
+    };
+        
+    const packageJson: PartialPackageJsonEntity = JSON.parse(packageJsonRaw);
+    expect(packageJson.dependencies).to.eql(expectedDependencies, "Wrong dependencies!");
+    expect(packageJson.devDependencies).to.eql(expectedDevDependencies, "Wrong devDependencies!");
+    
+    expect(existsSync(join(testDirectory, "node_modules"))).to.be.true;
+    expect(existsSync(join(testDirectory, "package-lock.json"))).to.be.true;
+  });
 });

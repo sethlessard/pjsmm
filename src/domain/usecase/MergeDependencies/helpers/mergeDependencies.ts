@@ -12,6 +12,9 @@ function _mergeDependencies(allDependencies: DependencyDefinition[]): Dependency
   // flatten the dependencies and keep the latest version if there are multiples
   const reduced = allDependencies.reduce((accumulator: DependencyDefinition, currentDependency: DependencyDefinition): DependencyDefinition => {
     // read the dependency keys from the current dependency
+    if (!currentDependency) {
+      return accumulator;
+    } 
     const currentDepKeys = Object.keys(currentDependency);
     // read the dependency keys from the accumulator
     const accumDepKeys = Object.keys(accumulator);

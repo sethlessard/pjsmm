@@ -5,36 +5,28 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "Debug",
       "type": "node",
       "request": "launch",
-      "name": "Validate Example",
-      "runtimeExecutable": "npm",
-      "runtimeArgs": [
-        "run-script",
-        "debug"
-      ],
-      "args": [
-        "validate",
-        "example/.mm.json"
-      ],
-      "port": 9229,
-      "skipFiles": [
-        "<node_internals>/**"
-      ],
-      "sourceMaps": true
-    },
-    {
-      "name": "Integration Tests",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["--nolazy", "-r", "ts-node/register/transpile-only"],
+
+      "args": ["src/presentation/index.ts"],
+      
+      "cwd": "${workspaceRoot}",
+      "internalConsoleOptions": "openOnSessionStart",
+      "skipFiles": ["<node_internals>/**", "node_modules/**"]
+    },    {
+      "name": "Debug Merge Example",
+      "type": "node",
       "request": "launch",
-      "runtimeArgs": [
-        "run-script",
-        "debug:integration"
-      ],
-      "runtimeExecutable": "npm",
-      "skipFiles": [
-        "<node_internals>/**"
-      ],
-      "type": "pwa-node"
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["--nolazy", "-r", "ts-node/register/transpile-only"],
+
+      "args": ["src/presentation/index.ts", "merge", "--config", "example/.mm.json"],
+      "cwd": "${workspaceRoot}",
+      "internalConsoleOptions": "openOnSessionStart",
+      "skipFiles": ["<node_internals>/**", "node_modules/**"]
     }
   ]
 }

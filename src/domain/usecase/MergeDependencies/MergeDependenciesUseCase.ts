@@ -81,7 +81,7 @@ export class MergeDependenciesUseCase extends UseCase<MergeDependenciesRequestEn
     const filterProjects = async (projects: ProjectEntity[]): Promise<ProjectEntity[]> => {
       const filtered: ProjectEntity[] = [];
       for (const p of projects) {
-        if (await this.tsconfigService.isThereATSConfig(p.rootDir)) {
+        if (await this.tsconfigService.isThereATSConfig(join(projectRoot, p.rootDir))) {
           filtered.push(p);
         } else {
           ignoredProjects.push(p);
@@ -96,7 +96,7 @@ export class MergeDependenciesUseCase extends UseCase<MergeDependenciesRequestEn
     const packageJsonFiles: PartialPackageJsonEntity[] = [];
     try {
       for (const p of projects) {
-        const packageJson = await this.packageJsonService.readPackageJson(p.rootDir);
+        const packageJson = await this.packageJsonService.readPackageJson(join(projectRoot, p.rootDir));
         if (!packageJson) {
           ignoredProjects.push(p);
         } else {
