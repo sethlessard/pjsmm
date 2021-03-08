@@ -1,6 +1,6 @@
 {
   "name": "ts-prm",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "CLI application to manage dependencies required by typescript sub-projects in a main project package.json",
   "bin": {
     "ts-prm": "./lib/index.js"
