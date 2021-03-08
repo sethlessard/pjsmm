@@ -9,7 +9,7 @@ export class ConfigurationServiceImpl implements ConfigurationService {
   /**
      * Read the configuration file.
      * If a configuration path is not supplied, the the configuration file will be expected
-     * to live at $PWD/.mm.json
+     * to live at $PWD/.tsprm.json
      * @param configurationPath the path to the configuration file.
      * @returns the configuration file or undefined if one is not found at the specified path.
      */

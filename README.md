@@ -10,11 +10,8 @@ This CLI application is a helper for TypeScript's project reference feature when
   - [Configuration File](#configuration-file)
     - [Example Configuration File](#example-configuration-file)
   - [Usage](#usage)
-    - [ts-prm --help](#ts-prm---help)
     - [ts-prm merge](#ts-prm-merge)
-      - [ts-prm merge --help](#ts-prm-merge---help)
     - [ts-prm validate](#ts-prm-validate)
-      - [ts-prm validate --help](#ts-prm-validate---help)
 
 ## Why?
 
@@ -24,7 +21,7 @@ Take the following example:
 
 ```bash
 main-project
-│   .mm.json
+│   .tsprm.json
 │   package.json
 │   tsconfig.json
 |   node_modules
@@ -96,25 +93,9 @@ yarn global add ts-prm
 
 ## Usage 
 
-### ts-prm --help
-
-```bash
-ts-prm <command>
-
-Commands:
-  ts-prm validate  Validate a configuration file
-  ts-prm merge     Merge the dependencies of one or more subprojects (TypeScript
-                   project references) into a single top-level package.json file
-
-Options:
-      --help                  Show help                                [boolean]
-      --version               Show version number                      [boolean]
-  -c, --configFile, --config  The path to the ts-prm config file (.mm.json)
-                                                                        [string]
-```
 ### ts-prm merge
 
-#### ts-prm merge --help 
+Merge the dependencies (and devDependencies) of one or more TypeScript project references into a single upper-level `package.json` file.
 
 ```bash
 ts-prm merge
@@ -125,7 +106,7 @@ references) into a single top-level package.json file
 Options:
       --help                  Show help                                [boolean]
       --version               Show version number                      [boolean]
-  -c, --configFile, --config  The path to the ts-prm config file (.mm.json)
+  -c, --configFile, --config  The path to the ts-prm config file (.tsprm.json)
                                                                         [string]
   -i, --install               Install node dependencies after merging the
                               typescript submodules.  [boolean] [default: false]
@@ -138,7 +119,7 @@ Options:
 
 ### ts-prm validate
 
-#### ts-prm validate --help
+Validate a ts-prm configuration file.
 
 ```bash
 ts-prm validate
@@ -148,7 +129,7 @@ Validate a configuration file
 Options:
       --help                  Show help                                [boolean]
       --version               Show version number                      [boolean]
-  -c, --configFile, --config  The path to the ts-prm config file (.mm.json)
+  -c, --configFile, --config  The path to the ts-prm config file (.tsprm.json)
                                                                         [string]
 ```
 

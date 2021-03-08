@@ -21,7 +21,7 @@ suite("mm-ts validate", () => {
   });
 
   test("It should throw an error if a configuration file was not found.", async () => {
-    const { stdout, stderr } = await pexec(`node lib/index.js validate --config ${resolve(testDirectory, ".mm.json")}`, { cwd: e2eHelper.getProjectRoot(), encoding: "utf-8" });
+    const { stdout, stderr } = await pexec(`node lib/index.js validate --config ${resolve(testDirectory, ".tsprm.json")}`, { cwd: e2eHelper.getProjectRoot(), encoding: "utf-8" });
 
     expect(stderr).to.match(/Error: Could not read/g, "The error message did not match!");
     expect(stdout).to.be.empty;
@@ -31,7 +31,7 @@ suite("mm-ts validate", () => {
     // setup the test
     e2eHelper.setupValidateConfigTestDirectory(testDirectory, ValidateConfigTemplate.ProjectWithExtraConfigProperty);
 
-    const { stdout, stderr } = await pexec(`node lib/index.js validate --config ${join(testDirectory, ".mm.json")}`, { cwd: e2eHelper.getProjectRoot(), encoding: "utf-8" });
+    const { stdout, stderr } = await pexec(`node lib/index.js validate --config ${join(testDirectory, ".tsprm.json")}`, { cwd: e2eHelper.getProjectRoot(), encoding: "utf-8" });
     expect(stdout).to.be.empty;
     expect(stderr).to.match(/There is an invalid property in the config file/g, "Message did not match!");
   });
@@ -40,7 +40,7 @@ suite("mm-ts validate", () => {
     // setup the test
     e2eHelper.setupValidateConfigTestDirectory(testDirectory, ValidateConfigTemplate.ProjectWithInvalidVersion);
 
-    const { stdout, stderr } = await pexec(`node lib/index.js validate --config ${join(testDirectory, ".mm.json")}`, { cwd: e2eHelper.getProjectRoot(), encoding: "utf-8" });
+    const { stdout, stderr } = await pexec(`node lib/index.js validate --config ${join(testDirectory, ".tsprm.json")}`, { cwd: e2eHelper.getProjectRoot(), encoding: "utf-8" });
     expect(stdout).to.be.empty;
     expect(stderr).to.match(/Invalid 'version' property!/g, "Message did not match!");
   });
@@ -49,16 +49,16 @@ suite("mm-ts validate", () => {
     // setup the test
     e2eHelper.setupValidateConfigTestDirectory(testDirectory, ValidateConfigTemplate.ProjectWithNoConfigFile);
 
-    const { stdout, stderr } = await pexec(`node lib/index.js validate --config ${join(testDirectory, ".mm.json")}`, { cwd: e2eHelper.getProjectRoot(), encoding: "utf-8" });
+    const { stdout, stderr } = await pexec(`node lib/index.js validate --config ${join(testDirectory, ".tsprm.json")}`, { cwd: e2eHelper.getProjectRoot(), encoding: "utf-8" });
     expect(stdout).to.be.empty;
-    expect(stderr).to.match(/Could not read the '.mm.json' configuration file!/g, "Message did not match!");
+    expect(stderr).to.match(/Could not read the '.tsprm.json' configuration file!/g, "Message did not match!");
   });
 
   test("It should throw an error if a configuration file has no 'projects' property.", async () => {
     // setup the test
     e2eHelper.setupValidateConfigTestDirectory(testDirectory, ValidateConfigTemplate.ProjectWithNoProjectsProperty);
 
-    const { stdout, stderr } = await pexec(`node lib/index.js validate --config ${join(testDirectory, ".mm.json")}`, { cwd: e2eHelper.getProjectRoot(), encoding: "utf-8" });
+    const { stdout, stderr } = await pexec(`node lib/index.js validate --config ${join(testDirectory, ".tsprm.json")}`, { cwd: e2eHelper.getProjectRoot(), encoding: "utf-8" });
     expect(stdout).to.be.empty;
     expect(stderr).to.match(/No 'projects' property!/g, "Message did not match!");
   });
@@ -67,7 +67,7 @@ suite("mm-ts validate", () => {
     // setup the test
     e2eHelper.setupValidateConfigTestDirectory(testDirectory, ValidateConfigTemplate.ProjectWithNoSubprojects);
 
-    const { stdout, stderr } = await pexec(`node lib/index.js validate --config ${join(testDirectory, ".mm.json")}`, { cwd: e2eHelper.getProjectRoot(), encoding: "utf-8" });
+    const { stdout, stderr } = await pexec(`node lib/index.js validate --config ${join(testDirectory, ".tsprm.json")}`, { cwd: e2eHelper.getProjectRoot(), encoding: "utf-8" });
     expect(stdout).to.be.empty;
     expect(stderr).to.match(/No subprojects specified in the 'projects' property!/g, "Message did not match!");
   });
@@ -76,7 +76,7 @@ suite("mm-ts validate", () => {
     // setup the test
     e2eHelper.setupValidateConfigTestDirectory(testDirectory, ValidateConfigTemplate.ProjectWithNoVersion);
 
-    const { stdout, stderr } = await pexec(`node lib/index.js validate --config ${join(testDirectory, ".mm.json")}`, { cwd: e2eHelper.getProjectRoot(), encoding: "utf-8" });
+    const { stdout, stderr } = await pexec(`node lib/index.js validate --config ${join(testDirectory, ".tsprm.json")}`, { cwd: e2eHelper.getProjectRoot(), encoding: "utf-8" });
     expect(stdout).to.be.empty;
     expect(stderr).to.match(/No 'version' property!/g, "Message did not match!");
   });
@@ -85,7 +85,7 @@ suite("mm-ts validate", () => {
     // setup the test
     e2eHelper.setupValidateConfigTestDirectory(testDirectory, ValidateConfigTemplate.ProjectWithValidConfigFile);
 
-    const { stdout, stderr } = await pexec(`node lib/index.js validate --config ${join(testDirectory, ".mm.json")}`, { cwd: e2eHelper.getProjectRoot(), encoding: "utf-8" });
+    const { stdout, stderr } = await pexec(`node lib/index.js validate --config ${join(testDirectory, ".tsprm.json")}`, { cwd: e2eHelper.getProjectRoot(), encoding: "utf-8" });
     expect(stderr).to.be.empty;
     expect(stdout).to.match(/The configuration file is valid!/g, "Message did not match!");
   });

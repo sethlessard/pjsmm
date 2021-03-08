@@ -23,7 +23,7 @@
       "runtimeExecutable": "node",
       "runtimeArgs": ["--nolazy", "-r", "ts-node/register/transpile-only"],
 
-      "args": ["src/presentation/index.ts", "merge", "--config", "example/.mm.json"],
+      "args": ["src/presentation/index.ts", "merge", "--config", "example/.tsprm.json"],
       "cwd": "${workspaceRoot}",
       "internalConsoleOptions": "openOnSessionStart",
       "skipFiles": ["<node_internals>/**", "node_modules/**"]

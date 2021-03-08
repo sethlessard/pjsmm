@@ -20,7 +20,7 @@ import { mergeDependencies } from "./helpers/mergeDependencies";
 @injectable()
 export class MergeDependenciesUseCase extends UseCase<MergeDependenciesRequestEntity, MergeDependenciesResponseEntity> {
 
-  private static readonly DEFAULT_CONFIG_PATH = join(process.cwd(), ".mm.json");
+  private static readonly DEFAULT_CONFIG_PATH = join(process.cwd(), ".tsprm.json");
 
   /**
    * Create a new MergeDependenciesUseCase instance.

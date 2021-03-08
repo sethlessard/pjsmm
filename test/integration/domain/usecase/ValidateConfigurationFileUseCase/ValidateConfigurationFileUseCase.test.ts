@@ -21,7 +21,7 @@ suite("domain/usecase/ValidateConfigurationFileUseCase/ValidateConfigurationFile
     // setup dependency injection
     const configService: ConfigurationService = new ConfigurationServiceImpl();
     usecase = new ValidateConfigurationFileUseCase(configService);
-    configPath = path.join(testDirectory, ".mm.json");
+    configPath = path.join(testDirectory, ".tsprm.json");
   });
   afterEach(async () => {
     if (testDirectory) {

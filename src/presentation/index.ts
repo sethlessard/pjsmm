@@ -28,7 +28,7 @@ const yargsInstance = yargs(process.argv.slice(2))
     packageManager: { type: "string", default: "yarn", description: "The node_modules package manager to use for dependency installation.", choices: ["yarn", "npm"] }
   })
   .options({
-    configFile: { type: "string", alias: ["config", "c"], description: "The path to the tsprm config file (.mm.json)" }
+    configFile: { type: "string", alias: ["config", "c"], description: "The path to the ts-prm config file (.tsprm.json)" }
   })
   .demandCommand(1, "Specify a command. -h for help.");
 
@@ -127,7 +127,7 @@ function handleUseCaseError(response: ErrorResponseEntity) {
     writeError("Config Error: Invalid 'version' property! Valid values are '1.0.0'.");
     break;
   case ErrorCode.CONFIG_READ_ERROR:
-    writeError("Could not read the '.mm.json' configuration file!: " + response.error);
+    writeError("Could not read the '.tsprm.json' configuration file!: " + response.error);
     break;
   case ErrorCode.CONFIG_NO_VERSION:
     writeError("Config Error: No 'version' property!'");

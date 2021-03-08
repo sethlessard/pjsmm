@@ -52,7 +52,7 @@ suite("mm-ts merge", () => {
   });
 
   test("It should throw an error if a configuration file was not found.", async () => {
-    const { stdout, stderr } = await pexec(`node lib/index.js merge --config ${resolve(testDirectory, ".mm.json")}`, { cwd: e2eHelper.getProjectRoot(), encoding: "utf-8" });
+    const { stdout, stderr } = await pexec(`node lib/index.js merge --config ${resolve(testDirectory, ".tsprm.json")}`, { cwd: e2eHelper.getProjectRoot(), encoding: "utf-8" });
 
     expect(stderr).to.match(/Error: Could not read/g, "The error message did not match!");
     expect(stdout).to.be.empty;
@@ -62,7 +62,7 @@ suite("mm-ts merge", () => {
     // setup the test
     e2eHelper.setupMergeDependenciesTestDirectory(testDirectory, MergeDependenciesTemplate.ProjectWithExtraConfigProperty);
 
-    const { stdout, stderr } = await pexec(`node lib/index.js merge --config ${join(testDirectory, ".mm.json")}`, { cwd: e2eHelper.getProjectRoot(), encoding: "utf-8" });
+    const { stdout, stderr } = await pexec(`node lib/index.js merge --config ${join(testDirectory, ".tsprm.json")}`, { cwd: e2eHelper.getProjectRoot(), encoding: "utf-8" });
     expect(stdout).to.be.empty;
     expect(stderr).to.match(/There is an invalid property in the config file/g, "Message did not match!");
   });
@@ -71,7 +71,7 @@ suite("mm-ts merge", () => {
     // setup the test
     e2eHelper.setupMergeDependenciesTestDirectory(testDirectory, MergeDependenciesTemplate.ProjectWithInvalidVersion);
 
-    const { stdout, stderr } = await pexec(`node lib/index.js merge --config ${join(testDirectory, ".mm.json")}`, { cwd: e2eHelper.getProjectRoot(), encoding: "utf-8" });
+    const { stdout, stderr } = await pexec(`node lib/index.js merge --config ${join(testDirectory, ".tsprm.json")}`, { cwd: e2eHelper.getProjectRoot(), encoding: "utf-8" });
     expect(stdout).to.be.empty;
     expect(stderr).to.match(/Invalid 'version' property!/g, "Message did not match!");
   });
@@ -80,16 +80,16 @@ suite("mm-ts merge", () => {
     // setup the test
     e2eHelper.setupMergeDependenciesTestDirectory(testDirectory, MergeDependenciesTemplate.ProjectWithNoConfigFile);
 
-    const { stdout, stderr } = await pexec(`node lib/index.js merge --config ${join(testDirectory, ".mm.json")}`, { cwd: e2eHelper.getProjectRoot(), encoding: "utf-8" });
+    const { stdout, stderr } = await pexec(`node lib/index.js merge --config ${join(testDirectory, ".tsprm.json")}`, { cwd: e2eHelper.getProjectRoot(), encoding: "utf-8" });
     expect(stdout).to.be.empty;
-    expect(stderr).to.match(/Could not read the '.mm.json' configuration file!/g, "Message did not match!");
+    expect(stderr).to.match(/Could not read the '.tsprm.json' configuration file!/g, "Message did not match!");
   });
 
   test("It should throw an error if a configuration file has no 'projects' property.", async () => {
     // setup the test
     e2eHelper.setupMergeDependenciesTestDirectory(testDirectory, MergeDependenciesTemplate.ProjectWithNoProjectsProperty);
 
-    const { stdout, stderr } = await pexec(`node lib/index.js merge --config ${join(testDirectory, ".mm.json")}`, { cwd: e2eHelper.getProjectRoot(), encoding: "utf-8" });
+    const { stdout, stderr } = await pexec(`node lib/index.js merge --config ${join(testDirectory, ".tsprm.json")}`, { cwd: e2eHelper.getProjectRoot(), encoding: "utf-8" });
     expect(stdout).to.be.empty;
     expect(stderr).to.match(/No 'projects' property!/g, "Message did not match!");
   });
@@ -98,7 +98,7 @@ suite("mm-ts merge", () => {
     // setup the test
     e2eHelper.setupMergeDependenciesTestDirectory(testDirectory, MergeDependenciesTemplate.ProjectWithNoSubprojects);
 
-    const { stdout, stderr } = await pexec(`node lib/index.js merge --config ${join(testDirectory, ".mm.json")}`, { cwd: e2eHelper.getProjectRoot(), encoding: "utf-8" });
+    const { stdout, stderr } = await pexec(`node lib/index.js merge --config ${join(testDirectory, ".tsprm.json")}`, { cwd: e2eHelper.getProjectRoot(), encoding: "utf-8" });
     expect(stdout).to.be.empty;
     expect(stderr).to.match(/No subprojects specified in the 'projects' property!/g, "Message did not match!");
   });
@@ -107,7 +107,7 @@ suite("mm-ts merge", () => {
     // setup the test
     e2eHelper.setupMergeDependenciesTestDirectory(testDirectory, MergeDependenciesTemplate.ProjectWithNoVersion);
 
-    const { stdout, stderr } = await pexec(`node lib/index.js merge --config ${join(testDirectory, ".mm.json")}`, { cwd: e2eHelper.getProjectRoot(), encoding: "utf-8" });
+    const { stdout, stderr } = await pexec(`node lib/index.js merge --config ${join(testDirectory, ".tsprm.json")}`, { cwd: e2eHelper.getProjectRoot(), encoding: "utf-8" });
     expect(stdout).to.be.empty;
     expect(stderr).to.match(/No 'version' property!/g, "Message did not match!");
   });
@@ -116,7 +116,7 @@ suite("mm-ts merge", () => {
     // setup the test
     e2eHelper.setupMergeDependenciesTestDirectory(testDirectory, MergeDependenciesTemplate.ValidProjectWith3Subprojects);
 
-    const { stdout, stderr } = await pexec(`node lib/index.js merge --config ${join(testDirectory, ".mm.json")} --skipDev`, { cwd: e2eHelper.getProjectRoot(), encoding: "utf-8" });
+    const { stdout, stderr } = await pexec(`node lib/index.js merge --config ${join(testDirectory, ".tsprm.json")} --skipDev`, { cwd: e2eHelper.getProjectRoot(), encoding: "utf-8" });
     expect(stderr).to.be.empty;
     expect(stdout).to.match(/Done./g, "Message did not match!");
 
@@ -140,7 +140,7 @@ suite("mm-ts merge", () => {
     // setup the test
     e2eHelper.setupMergeDependenciesTestDirectory(testDirectory, MergeDependenciesTemplate.ValidProjectWith3Subprojects);
 
-    const { stdout, stderr } = await pexec(`node lib/index.js merge --config ${join(testDirectory, ".mm.json")}`, { cwd: e2eHelper.getProjectRoot(), encoding: "utf-8" });
+    const { stdout, stderr } = await pexec(`node lib/index.js merge --config ${join(testDirectory, ".tsprm.json")}`, { cwd: e2eHelper.getProjectRoot(), encoding: "utf-8" });
     expect(stderr).to.be.empty;
     expect(stdout).to.match(/Done./g, "Message did not match!");
     
@@ -170,7 +170,7 @@ suite("mm-ts merge", () => {
     // setup the test
     e2eHelper.setupMergeDependenciesTestDirectory(testDirectory, MergeDependenciesTemplate.ValidProjectWith3Subprojects);
 
-    const { stdout, stderr } = await pexec(`node lib/index.js merge --config ${join(testDirectory, ".mm.json")} --install`, { cwd: e2eHelper.getProjectRoot(), encoding: "utf-8" });
+    const { stdout, stderr } = await pexec(`node lib/index.js merge --config ${join(testDirectory, ".tsprm.json")} --install`, { cwd: e2eHelper.getProjectRoot(), encoding: "utf-8" });
     expect(stderr).to.be.empty;
     expect(stdout).to.match(/Done./g, "Message did not match!");
     
@@ -203,7 +203,7 @@ suite("mm-ts merge", () => {
     // setup the test
     e2eHelper.setupMergeDependenciesTestDirectory(testDirectory, MergeDependenciesTemplate.ValidProjectWith3Subprojects);
 
-    const { stdout, stderr } = await pexec(`node lib/index.js merge --config ${join(testDirectory, ".mm.json")} --install --packageManager npm`, { cwd: e2eHelper.getProjectRoot(), encoding: "utf-8" });
+    const { stdout, stderr } = await pexec(`node lib/index.js merge --config ${join(testDirectory, ".tsprm.json")} --install --packageManager npm`, { cwd: e2eHelper.getProjectRoot(), encoding: "utf-8" });
     expect(stderr).to.be.empty;
     expect(stdout).to.match(/Done./g, "Message did not match!");
         

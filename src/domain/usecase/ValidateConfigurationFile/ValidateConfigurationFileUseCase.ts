@@ -14,7 +14,7 @@ import { ConfigurationFileValidator } from "../../entities/validators/Configurat
 class ValidateConfigurationFileUseCase
   extends UseCase<ValidateConfigurationFileRequestEntity, ValidateConfigurationFileResponseEntity> {
 
-  private static readonly DEFAULT_CONFIG_PATH = join(process.cwd(), ".mm.json");
+  private static readonly DEFAULT_CONFIG_PATH = join(process.cwd(), ".tsprm.json");
 
   /**
    * Create a new ValidateConfigurationFileUseCase instance.
