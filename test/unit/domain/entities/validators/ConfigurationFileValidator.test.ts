@@ -9,7 +9,14 @@ import { ErrorCode } from "../../../../../src/domain/entities/ErrorCode";
 
 const VALID1: ConfigurationFileEntity = {
   version: "1.0.0",
-  projects: [],
+  projects: [
+    {
+      rootDir: "path/to/subproject1"
+    },
+    {
+      rootDir: "path/to/subproject2"
+    }
+  ],
   filePath: ""
 };
 const VALID2: ConfigurationFileEntity = {
@@ -29,13 +36,27 @@ const VALID2: ConfigurationFileEntity = {
 };
 // @ts-expect-error
 const EXPECT_NO_VERSION: ConfigurationFileEntity = {
-  projects: [],
+  projects: [
+    {
+      rootDir: "path/to/subproject1"
+    },
+    {
+      rootDir: "path/to/subproject2"
+    }
+  ],
   filePath: ""
 };
 const EXPECT_INVALID_VERSION: ConfigurationFileEntity = {
   // @ts-expect-error
   version: "1.0.1",
-  projects: [],
+  projects: [
+    {
+      rootDir: "path/to/subproject1"
+    },
+    {
+      rootDir: "path/to/subproject2"
+    }
+  ],
   filePath: ""
 };
 // @ts-expect-error
@@ -45,7 +66,14 @@ const EXPECT_NO_PROJECTS: ConfigurationFileEntity = {
 };
 const EXPECT_EXTRA_PROPERTY: ConfigurationFileEntity = {
   version: "1.0.0",
-  projects: [],
+  projects: [
+    {
+      rootDir: "path/to/subproject1"
+    },
+    {
+      rootDir: "path/to/subproject2"
+    }
+  ],
   filePath: "",
   // @ts-expect-error
   extraProperty: "yep"
@@ -57,6 +85,9 @@ const EXPECT_EXTRA_PROJECT_PROPERTY: ConfigurationFileEntity = {
       rootDir: "path",
       // @ts-expect-error
       extraProp: "hi"
+    },
+    {
+      rootDir: "path/to/subproject1"
     }
   ],
   filePath: ""

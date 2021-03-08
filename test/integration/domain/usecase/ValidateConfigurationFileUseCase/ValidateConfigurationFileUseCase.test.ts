@@ -96,7 +96,7 @@ suite("domain/usecase/ValidateConfigurationFileUseCase/ValidateConfigurationFile
 
   test("It should return with an error if an invalid property is supplied at the root level", async () => {
     // write a dummy configuration file
-    await writeFile(configPath, "{\"version\": \"1.0.0\", \"invalidProp\": true, \"projects\":[]}", { encoding: "utf-8" });
+    await writeFile(configPath, "{\"version\": \"1.0.0\", \"invalidProp\": true, \"projects\":[{\"rootPath\": \"path/to/project1\"}]}", { encoding: "utf-8" });
 
     usecase.setRequestParam({ configurationFilePath: configPath });
     const result = await usecase.execute();
