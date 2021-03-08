@@ -1,6 +1,6 @@
 
 import { spawn } from "child_process";
-import { dirname } from "path";
+import { dirname, join } from "path";
 
 import { ConfigurationService } from "../../datasources/services/ConfigurationService";
 import { PackageJsonService } from "../../datasources/services/PackageJsonService";
@@ -19,6 +19,8 @@ import { mergeDependencies } from "./helpers/mergeDependencies";
 
 @injectable()
 export class MergeDependenciesUseCase extends UseCase<MergeDependenciesRequestEntity, MergeDependenciesResponseEntity> {
+
+  private static readonly DEFAULT_CONFIG_PATH = join(process.cwd(), ".mm.json");
 
   /**
    * Create a new MergeDependenciesUseCase instance.
@@ -39,7 +41,12 @@ export class MergeDependenciesUseCase extends UseCase<MergeDependenciesRequestEn
    * into a single package.json.
    */
   protected async usecaseLogic(): Promise<MergeDependenciesResponseEntity | ErrorResponseEntity> {
-    const { configFilePath, devDependencies, installOptions } = this._param;
+    let { configFilePath } = this._param;
+    const { devDependencies, installOptions } = this._param;
+    
+    if (!configFilePath) {
+      configFilePath = MergeDependenciesUseCase.DEFAULT_CONFIG_PATH;
+    }
 
     // read the configuration
     let configuration: ConfigurationFileEntity | undefined;
@@ -59,7 +66,7 @@ export class MergeDependenciesUseCase extends UseCase<MergeDependenciesRequestEn
     }
 
     // verify there is a package.json at the same level of the configuation
-    const projectRoot: string = dirname(configuration.filePath);
+    const projectRoot: string = dirname(configFilePath);
     const mainPackageJson = await this.packageJsonService.readPackageJson(projectRoot);
     if (!mainPackageJson) {
       return { success: false, errorCode: ErrorCode.NO_PACKAGE_JSON };
@@ -115,7 +122,7 @@ export class MergeDependenciesUseCase extends UseCase<MergeDependenciesRequestEn
       let args: string[] = [];
       if (installOptions.packageManager === "npm") {
         args = ["install"];
-      } 
+      }
       // install the dependencies
       return {
         success: true,

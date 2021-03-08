@@ -11,9 +11,4 @@ export interface ConfigurationFileEntity {
    * The TypeScript subprojects to manage.
    */
   projects: ProjectEntity[];
-
-  /**
-   * The file path where the configuration file lives.
-   */
-  filePath: string;
 }

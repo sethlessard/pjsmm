@@ -53,6 +53,18 @@ async function main(args: Arguments): Promise<void> {
         return;
       }
 
+      // output ignored projects
+      if (response.payload.ignoredProjects.length > 0) {
+        console.log(chalk.brightYellow("Ignored projects:"));
+        response.payload.ignoredProjects.forEach(p => chalk.yellow(p.rootDir));
+      }
+
+      // output merged projects
+      if (response.payload.mergedProjects.length > 0) {
+        console.log(chalk.green("Merged projects:"));
+        response.payload.mergedProjects.forEach(p => chalk.green(p.rootDir));
+      }
+
       if (response.payload.installProcess) {
         response.payload.installProcess.on("message", (message: Serializable) => console.log(`[STDOUT] ${message.toString()}`));
         response.payload.installProcess.on("error", (err) => console.log(`[ERROR] ${err}`));

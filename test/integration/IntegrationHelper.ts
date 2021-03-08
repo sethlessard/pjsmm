@@ -38,13 +38,11 @@ export class IntegrationHelper {
   /**
    * Create a test configuration file object.
    * @param projects the projects to include
-   * @param testExtensionDirectory the directory of the test extension.
    */
-  static createConfig(projects: string[] = [], testExtensionDirectory: string): ConfigurationFileEntity {
+  static createConfig(projects: string[] = []): ConfigurationFileEntity {
     return {
       version: "1.0.0",
-      projects: projects.map(p => ({ rootDir: p })),
-      filePath: join(testExtensionDirectory, ".mm.json")
+      projects: projects.map(p => ({ rootDir: p }))
     };
   }
 

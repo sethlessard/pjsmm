@@ -7,5 +7,5 @@ export interface ConfigurationService {
    * @param configurationPath the path to the configuraiton file.
    * @returns the configuration file or undefined if none exists.
    */
-  readConfigurationFile(configurationPath?: string): Promise<ConfigurationFileEntity | undefined>;
+  readConfigurationFile(configurationPath: string): Promise<ConfigurationFileEntity | undefined>;
 }

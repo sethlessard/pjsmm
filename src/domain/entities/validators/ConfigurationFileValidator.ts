@@ -6,8 +6,7 @@ export class ConfigurationFileValidator {
 
   private static readonly configurationFileProperties = [
     "version",
-    "projects",
-    "filePath"
+    "projects"
   ];
 
   private static readonly projectProperties = [

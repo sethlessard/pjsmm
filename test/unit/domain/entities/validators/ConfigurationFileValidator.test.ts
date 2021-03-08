@@ -16,8 +16,7 @@ const VALID1: ConfigurationFileEntity = {
     {
       rootDir: "path/to/subproject2"
     }
-  ],
-  filePath: ""
+  ]
 };
 const VALID2: ConfigurationFileEntity = {
   version: "1.0.0",
@@ -31,8 +30,7 @@ const VALID2: ConfigurationFileEntity = {
     {
       rootDir: "path/to/subproject3"
     }
-  ],
-  filePath: ""
+  ]
 };
 // @ts-expect-error
 const EXPECT_NO_VERSION: ConfigurationFileEntity = {
@@ -43,8 +41,7 @@ const EXPECT_NO_VERSION: ConfigurationFileEntity = {
     {
       rootDir: "path/to/subproject2"
     }
-  ],
-  filePath: ""
+  ]
 };
 const EXPECT_INVALID_VERSION: ConfigurationFileEntity = {
   // @ts-expect-error
@@ -56,13 +53,11 @@ const EXPECT_INVALID_VERSION: ConfigurationFileEntity = {
     {
       rootDir: "path/to/subproject2"
     }
-  ],
-  filePath: ""
+  ]
 };
 // @ts-expect-error
 const EXPECT_NO_PROJECTS: ConfigurationFileEntity = {
-  version: "1.0.0",
-  filePath: ""
+  version: "1.0.0"
 };
 const EXPECT_EXTRA_PROPERTY: ConfigurationFileEntity = {
   version: "1.0.0",
@@ -74,7 +69,6 @@ const EXPECT_EXTRA_PROPERTY: ConfigurationFileEntity = {
       rootDir: "path/to/subproject2"
     }
   ],
-  filePath: "",
   // @ts-expect-error
   extraProperty: "yep"
 };
@@ -89,20 +83,19 @@ const EXPECT_EXTRA_PROJECT_PROPERTY: ConfigurationFileEntity = {
     {
       rootDir: "path/to/subproject1"
     }
-  ],
-  filePath: ""
+  ]
 };
 
 suite("domain/entities/validators/ConfiguraionFileValidator", () => {
 
   suite("areThereExcessProperties", () => {
     test("It should return false for a valid Configuration file", () => {
-      const configFile: ConfigurationFileEntity = { version: "1.0.0", projects: [], filePath: "" };
+      const configFile: ConfigurationFileEntity = { version: "1.0.0", projects: []};
       assert.isFalse(ConfigurationFileValidator.areThereExcessProperties(configFile));
     });
 
     test("It should return true if there are invalid properties", () => {
-      const configFile = { version: "1.0.0", projects: [], invalidProp: true, filePath: "" } as ConfigurationFileEntity;
+      const configFile = { version: "1.0.0", projects: [], invalidProp: true} as ConfigurationFileEntity;
       assert.isTrue(ConfigurationFileValidator.areThereExcessProperties(configFile));
     });
   });

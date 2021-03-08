@@ -1,4 +1,5 @@
 import { inject, injectable } from "tsyringe";
+import { join } from "path";
 
 import { UseCase } from "../UseCase";
 import { ValidateConfigurationFileRequestEntity } from "./ValidateConfigurationFileRequestEntity";
@@ -13,6 +14,8 @@ import { ConfigurationFileValidator } from "../../entities/validators/Configurat
 class ValidateConfigurationFileUseCase
   extends UseCase<ValidateConfigurationFileRequestEntity, ValidateConfigurationFileResponseEntity> {
 
+  private static readonly DEFAULT_CONFIG_PATH = join(process.cwd(), ".mm.json");
+
   /**
    * Create a new ValidateConfigurationFileUseCase instance.
    * @param configurationService the Configuration service.
@@ -25,7 +28,11 @@ class ValidateConfigurationFileUseCase
    * Validate a configuration file.
    */
   protected async usecaseLogic(): Promise<ValidateConfigurationFileResponseEntity | ErrorResponseEntity> {
-    const { configurationFilePath } = this._param;
+    let { configurationFilePath } = this._param;
+
+    if (!configurationFilePath) {
+      configurationFilePath = ValidateConfigurationFileUseCase.DEFAULT_CONFIG_PATH;
+    }
 
     let configuration: ConfigurationFileEntity | undefined;
     try {
