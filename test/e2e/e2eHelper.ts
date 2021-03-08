@@ -14,9 +14,9 @@ export enum ValidateConfigTemplate {
   ProjectWithInvalidVersion,
   ProjectWithNoProjectsProperty,
   ProjectWithNoSubprojects,
-  ProjectWithNoTemplateFile,
+  ProjectWithNoConfigFile,
   ProjectWithNoVersion,
-  ProjectWithValidTemplateFile
+  ProjectWithValidConfigFile
 }
 
 class ValidateConfigurationTemplate {
@@ -43,11 +43,11 @@ class ValidateConfigurationTemplate {
       return ValidateConfigurationTemplate.ProjectWithNoProjectsProperty;
     case ValidateConfigTemplate.ProjectWithNoSubprojects:
       return ValidateConfigurationTemplate.ProjectWithNoSubprojects;
-    case ValidateConfigTemplate.ProjectWithNoTemplateFile:
+    case ValidateConfigTemplate.ProjectWithNoConfigFile:
       return ValidateConfigurationTemplate.ProjectWithNoTemplateFile;
     case ValidateConfigTemplate.ProjectWithNoVersion:
       return ValidateConfigurationTemplate.ProjectWithNoVersion;
-    case ValidateConfigTemplate.ProjectWithValidTemplateFile:
+    case ValidateConfigTemplate.ProjectWithValidConfigFile:
       return ValidateConfigurationTemplate.ProjectWithValidTemplateFile;
     }
   }

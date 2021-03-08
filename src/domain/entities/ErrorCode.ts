@@ -29,6 +29,11 @@ export enum ErrorCode {
   CONFIG_INVALID_PROPERTY = "CONFIG_INVALID_PROPERTY",
 
   /**
+   * Occurs when no projects are defined in the 'projects' property.
+   */
+  CONFIG_NO_PROJECTS = "CONFIG_NO_PROJECTS",
+
+  /**
    * Occurs when the 'projects' property is missing.
    */
   CONFIG_NO_PROJECTS_PROP = "CONFIG_NO_PROJECTS_PROPERTY",

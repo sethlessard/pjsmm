@@ -70,6 +70,9 @@ export class ConfigurationFileValidator {
     if (!configuration.projects) {
       return ErrorCode.CONFIG_NO_PROJECTS_PROP;
     }
+    if (configuration.projects.length === 0) {
+      return ErrorCode.CONFIG_NO_PROJECTS;
+    }
     if (ConfigurationFileValidator.areThereExcessProjectProperties(configuration.projects)) {
       return ErrorCode.CONFIG_INVALID_PROPERTY;
     }

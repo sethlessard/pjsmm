@@ -30,23 +30,66 @@ suite("mm-ts validate", () => {
       .catch(done);
   });
 
-  test("It should throw an error if a configuration file has an extra and invalid property.");
-  test("It should throw an error if a configuration file has an invalid version.");
-  test("It should throw an error if a project has no configuration file.");
-  test("It should throw an error if a configuration file has no 'projects' property.");
-  test("It should throw an error if a project has no subprojects configured.");
-  test("It should throw an error if a configuration file has no 'version' property.");
-
-  test("It should be able to validate a valid configuration file (relative path).", (done: Done) => {
+  test("It should throw an error if a configuration file has an extra and invalid property.", async () => {
     // setup the test
-    e2eHelper.setupValidateConfigTestDirectory(testDirectory, ValidateConfigTemplate.ProjectWithValidTemplateFile);
+    e2eHelper.setupValidateConfigTestDirectory(testDirectory, ValidateConfigTemplate.ProjectWithExtraConfigProperty);
 
-    pexec(`node lib/index.js validate --config ${join(testDirectory, ".mm.json")}`, { cwd: e2eHelper.getProjectRoot(), encoding: "utf-8" })
-      .then(({ stdout, stderr }) => {
-        expect(stderr).to.be.empty;
-        expect(stdout).to.match(/The configuration file is valid!/g, "Message did not match!");
-        done();
-      })
-      .catch(done);
+    const { stdout, stderr } = await pexec(`node lib/index.js validate --config ${join(testDirectory, ".mm.json")}`, { cwd: e2eHelper.getProjectRoot(), encoding: "utf-8" });
+    expect(stdout).to.be.empty;
+    expect(stderr).to.match(/There is an invalid property in the config file/g, "Message did not match!");
+  });
+
+  test("It should throw an error if a configuration file has an invalid version.", async () => {
+    // setup the test
+    e2eHelper.setupValidateConfigTestDirectory(testDirectory, ValidateConfigTemplate.ProjectWithInvalidVersion);
+
+    const { stdout, stderr } = await pexec(`node lib/index.js validate --config ${join(testDirectory, ".mm.json")}`, { cwd: e2eHelper.getProjectRoot(), encoding: "utf-8" });
+    expect(stdout).to.be.empty;
+    expect(stderr).to.match(/Invalid 'version' property!/g, "Message did not match!");
+  });
+
+  test("It should throw an error if a project has no configuration file.", async () => {
+    // setup the test
+    e2eHelper.setupValidateConfigTestDirectory(testDirectory, ValidateConfigTemplate.ProjectWithNoConfigFile);
+
+    const { stdout, stderr } = await pexec(`node lib/index.js validate --config ${join(testDirectory, ".mm.json")}`, { cwd: e2eHelper.getProjectRoot(), encoding: "utf-8" });
+    expect(stdout).to.be.empty;
+    expect(stderr).to.match(/Could not read the '.mm.json' configuration file!/g, "Message did not match!");
+  });
+
+  test("It should throw an error if a configuration file has no 'projects' property.", async () => {
+    // setup the test
+    e2eHelper.setupValidateConfigTestDirectory(testDirectory, ValidateConfigTemplate.ProjectWithNoProjectsProperty);
+
+    const { stdout, stderr } = await pexec(`node lib/index.js validate --config ${join(testDirectory, ".mm.json")}`, { cwd: e2eHelper.getProjectRoot(), encoding: "utf-8" });
+    expect(stdout).to.be.empty;
+    expect(stderr).to.match(/No 'projects' property!/g, "Message did not match!");
+  });
+
+  test("It should throw an error if a project has no subprojects configured.", async () => {
+    // setup the test
+    e2eHelper.setupValidateConfigTestDirectory(testDirectory, ValidateConfigTemplate.ProjectWithNoSubprojects);
+
+    const { stdout, stderr } = await pexec(`node lib/index.js validate --config ${join(testDirectory, ".mm.json")}`, { cwd: e2eHelper.getProjectRoot(), encoding: "utf-8" });
+    expect(stdout).to.be.empty;
+    expect(stderr).to.match(/No subprojects specified in the 'projects' property!/g, "Message did not match!");
+  });
+
+  test("It should throw an error if a configuration file has no 'version' property.", async () => {
+    // setup the test
+    e2eHelper.setupValidateConfigTestDirectory(testDirectory, ValidateConfigTemplate.ProjectWithNoVersion);
+
+    const { stdout, stderr } = await pexec(`node lib/index.js validate --config ${join(testDirectory, ".mm.json")}`, { cwd: e2eHelper.getProjectRoot(), encoding: "utf-8" });
+    expect(stdout).to.be.empty;
+    expect(stderr).to.match(/No 'version' property!/g, "Message did not match!");
+  });
+
+  test("It should be able to validate a valid configuration file (relative path).", async () => {
+    // setup the test
+    e2eHelper.setupValidateConfigTestDirectory(testDirectory, ValidateConfigTemplate.ProjectWithValidConfigFile);
+
+    const { stdout, stderr } = await pexec(`node lib/index.js validate --config ${join(testDirectory, ".mm.json")}`, { cwd: e2eHelper.getProjectRoot(), encoding: "utf-8" });
+    expect(stderr).to.be.empty;
+    expect(stdout).to.match(/The configuration file is valid!/g, "Message did not match!");
   });
 });

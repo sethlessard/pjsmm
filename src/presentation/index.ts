@@ -109,13 +109,22 @@ function handleUseCaseError(response: ErrorResponseEntity) {
   switch (response.errorCode) {
   // configuration file 
   case ErrorCode.CONFIG_INVALID_VERSION:
-    writeError("Config. Error: Invalid 'version' property! Valid values are '1.0.0'.");
+    writeError("Config Error: Invalid 'version' property! Valid values are '1.0.0'.");
     break;
   case ErrorCode.CONFIG_READ_ERROR:
     writeError("Could not read the '.mm.json' configuration file!: " + response.error);
     break;
   case ErrorCode.CONFIG_NO_VERSION:
-    writeError("Config. Error: No 'version' property!'");
+    writeError("Config Error: No 'version' property!'");
+    break;
+  case ErrorCode.CONFIG_INVALID_PROPERTY:
+    writeError("Config Error: There is an invalid property in the config file. Please reference the documentation for a correct config file layout.");
+    break;
+  case ErrorCode.CONFIG_NO_PROJECTS:
+    writeError("Config Error: No subprojects specified in the 'projects' property!");
+    break;
+  case ErrorCode.CONFIG_NO_PROJECTS_PROP:
+    writeError("Config Error: No 'projects' property!");
     break;
     // general
   case ErrorCode.GENERAL:
@@ -126,7 +135,7 @@ function handleUseCaseError(response: ErrorResponseEntity) {
     }
     break;
   default:
-    writeError("Implement the case you idiot.");
+    writeError("Implement the case you idiot." + response.errorCode);
   }
 }
 
