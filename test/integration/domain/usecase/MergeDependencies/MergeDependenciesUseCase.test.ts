@@ -79,7 +79,7 @@ suite("domain/usecase/MergeDependencies/MergeDependenciesUseCase", () => {
 
     // write the main project configuration file to use
     const configFilePath = path.join(testDirectory, ".mm.json");
-    await writeFile(configFilePath, JSON.stringify(IntegrationHelper.createConfig([package1Path, package2Path])), { encoding: "utf-8" });
+    await writeFile(configFilePath, JSON.stringify(IntegrationHelper.createConfig(["package1", "package2"])), { encoding: "utf-8" });
 
     // write the main project package.json
     const mainPackageJsonPath = path.join(testDirectory, "package.json");
@@ -124,7 +124,7 @@ suite("domain/usecase/MergeDependencies/MergeDependenciesUseCase", () => {
 
     // write the main project configuration file to use
     const configFilePath = path.join(testDirectory, ".mm.json");
-    await writeFile(configFilePath, JSON.stringify(IntegrationHelper.createConfig([package1Path, package2Path])), { encoding: "utf-8" });
+    await writeFile(configFilePath, JSON.stringify(IntegrationHelper.createConfig(["package1", "package2"])), { encoding: "utf-8" });
 
     // write the main project package.json
     const mainPackageJsonPath = path.join(testDirectory, "package.json");
@@ -169,7 +169,7 @@ suite("domain/usecase/MergeDependencies/MergeDependenciesUseCase", () => {
 
     // write the main project configuration file to use
     const configFilePath = path.join(testDirectory, ".mm.json");
-    await writeFile(configFilePath, JSON.stringify(IntegrationHelper.createConfig([package1Path, package2Path])), { encoding: "utf-8" });
+    await writeFile(configFilePath, JSON.stringify(IntegrationHelper.createConfig(["package1", "package2"])), { encoding: "utf-8" });
 
     // write the main project package.json
     const mainPackageJsonPath = path.join(testDirectory, "package.json");
