@@ -150,7 +150,7 @@ function handleUseCaseError(response: ErrorResponseEntity) {
     }
     break;
   default:
-    writeError("Implement the case you idiot." + response.errorCode);
+    writeError("Unimplemented error code!: " + response.errorCode ?? "");
     if (response.error) {
       writeError(response.error.message);
     }
