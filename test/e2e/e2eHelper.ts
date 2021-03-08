@@ -7,8 +7,48 @@ import rimraf from "rimraf";
 import { v4 as uuid } from "uuid";
 import { copySync } from "fs-extra";
 
-const ValidateConfigurationFileTemplateRoot = join(__dirname, "ValidateConfigurationFile", "templates");
 
+const MergeDependenciesTemplateRoot = join(__dirname, "MergeDependencies", "templates");
+export enum MergeDependenciesTemplate {
+  ProjectWithExtraConfigProperty,
+  ProjectWithInvalidVersion,
+  ProjectWithNoProjectsProperty,
+  ProjectWithNoSubprojects,
+  ProjectWithNoConfigFile,
+  ProjectWithNoVersion
+}
+class MergeDependenciesTemplates {
+  private static readonly ProjectWithExtraConfigProperty = join(MergeDependenciesTemplateRoot, "projectWithExtraConfigProperty");
+  private static readonly ProjectWithInvalidVersion = join(MergeDependenciesTemplateRoot, "projectWithInvalidVersion");
+  private static readonly ProjectWithNoProjectsProperty = join(MergeDependenciesTemplateRoot, "projectWithNoProjectsProperty");
+  private static readonly ProjectWithNoSubprojects = join(MergeDependenciesTemplateRoot, "projectWithNoSubprojects");
+  private static readonly ProjectWithNoTemplateFile = join(MergeDependenciesTemplateRoot, "projectWithNoConfigFile");
+  private static readonly ProjectWithNoVersion = join(MergeDependenciesTemplateRoot, "projectWithNoVersion");
+
+  /**
+   * Get the path to a MergeDependencies e2e test template directory.
+   * @param template the MergeDependenciesTemplate template type.
+   * @returns the path to the template folder.
+   */
+  static getTemplatePath(template: MergeDependenciesTemplate): string {
+    switch (template) {
+    case MergeDependenciesTemplate.ProjectWithExtraConfigProperty:
+      return MergeDependenciesTemplates.ProjectWithExtraConfigProperty;
+    case MergeDependenciesTemplate.ProjectWithInvalidVersion:
+      return MergeDependenciesTemplates.ProjectWithInvalidVersion;
+    case MergeDependenciesTemplate.ProjectWithNoProjectsProperty:
+      return MergeDependenciesTemplates.ProjectWithNoProjectsProperty;
+    case MergeDependenciesTemplate.ProjectWithNoSubprojects:
+      return MergeDependenciesTemplates.ProjectWithNoSubprojects;
+    case MergeDependenciesTemplate.ProjectWithNoConfigFile:
+      return MergeDependenciesTemplates.ProjectWithNoTemplateFile;
+    case MergeDependenciesTemplate.ProjectWithNoVersion:
+      return MergeDependenciesTemplates.ProjectWithNoVersion;
+    }
+  }
+}
+
+const ValidateConfigurationFileTemplateRoot = join(__dirname, "ValidateConfigurationFile", "templates");
 export enum ValidateConfigTemplate {
   ProjectWithExtraConfigProperty,
   ProjectWithInvalidVersion,
@@ -18,7 +58,6 @@ export enum ValidateConfigTemplate {
   ProjectWithNoVersion,
   ProjectWithValidConfigFile
 }
-
 class ValidateConfigurationTemplate {
   private static readonly ProjectWithExtraConfigProperty = join(ValidateConfigurationFileTemplateRoot, "projectWithExtraConfigProperty");
   private static readonly ProjectWithInvalidVersion = join(ValidateConfigurationFileTemplateRoot, "projectWithInvalidVersion");
@@ -54,7 +93,14 @@ class ValidateConfigurationTemplate {
 }
 // sanity check to make sure the template paths exist
 (() => {
-  // TODO: Merge use case templates
+  for (const key of Object.keys(MergeDependenciesTemplates)) {
+    if ((key as keyof MergeDependenciesTemplates) === "getTemplatePath") {
+      continue;
+    }
+    if (!existsSync(MergeDependenciesTemplates[key as keyof MergeDependenciesTemplates])) {
+      throw new Error(`e2e configuration error!: Missing template file: ${MergeDependenciesTemplates[key as keyof MergeDependenciesTemplates]}`);
+    }
+  }
   for (const key of Object.keys(ValidateConfigurationTemplate)) {
     if ((key as keyof ValidateConfigurationTemplate) === "getTemplatePath") {
       continue;
@@ -115,8 +161,21 @@ export class e2eHelper {
   }
 
   /**
+   * Setup a MergeDepdendencies test directory.
+   * @param testDirectory the test directory.
+   * @param template the ValidateConfigurationTemplate to use.
+   */
+  static setupMergeDependenciesTestDirectory(testDirectory: string, template: MergeDependenciesTemplate, silent = true): void {
+    const templatePath = MergeDependenciesTemplates.getTemplatePath(template);
+    if (!silent) {
+      console.log(`Copying template files from '${templatePath}' to '${testDirectory}'`);
+    }
+    return copySync(templatePath, testDirectory, { recursive: true });
+  }
+
+  /**
    * Setup a ValidateConfig test directory.
-   * @param testDirectory setup a ValidateConfig test directory.
+   * @param testDirectory the test directory.
    * @param template the ValidateConfigurationTemplate to use.
    */
   static setupValidateConfigTestDirectory(testDirectory: string, template: ValidateConfigTemplate, silent = true): void {
